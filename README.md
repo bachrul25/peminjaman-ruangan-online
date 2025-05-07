@@ -26,4 +26,4 @@ Project akhir fullstack web developer - peminjaman ruangan secara online
 ### E. Simple Way
 1. Tekan icon `git` yang ada di VSCode (biasanya ada dibawah icon `search`)
 2. Masukkan pesan perubahannya atau bisa menggunakan extension GitHub Copilot untuk auto-generate pesan commit
-3. Tekan tombol `Commit` dan tombol `Syinc` setelah commit
+3. Tekan tombol `Commit` dan tombol `Sync` setelah commit
