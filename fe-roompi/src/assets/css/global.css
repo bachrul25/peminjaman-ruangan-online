@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+.hind-madurai-light {
+  font-family: "Hind Madurai";
+  font-weight: 300;
+  font-style: normal;
+}
+
+.hind-madurai-regular {
+  font-family: "Hind Madurai";
+  font-weight: 400;
+  font-style: normal;
+}
+
+.hind-madurai-medium {
+  font-family: "Hind Madurai";
+  font-weight: 500;
+  font-style: normal;
+}
+
+.hind-madurai-semibold {
+  font-family: "Hind Madurai";
+  font-weight: 600;
+  font-style: normal;
+}
+
+.hind-madurai-bold {
+  font-family: "Hind Madurai";
+  font-weight: 700;
+  font-style: normal;
+}
+
+.primary {
+  color: #008395;
+}
+.secondary {
+  color: #DDEDFD;
+}
