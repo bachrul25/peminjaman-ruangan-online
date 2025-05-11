@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import '../../assets/css/global.css';
 import './index.css';
 import logo from '../../assets/images/logo.png';
@@ -17,7 +17,7 @@ function NavBar() {
                     {/* Navigation Links */}
                     <Link to="/" className="primary hind-madurai-regular">Home</Link>
                     <Link to="/rooms" className="text-black hind-madurai-regular">Rooms</Link>
-                    <Link to="/contact" className="text-black hind-madurai-regular">Contact</Link>
+                    <Link to="/history" className="text-black hind-madurai-regular">History</Link>
 
                     {/* Vertical Divider + Profile Link */}
                     <div className="h-6 border-l border-teal-600" />
