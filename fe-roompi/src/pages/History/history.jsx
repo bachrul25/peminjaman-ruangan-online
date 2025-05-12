@@ -29,7 +29,7 @@ const History = () => {
   const now = new Date();
 
   return (
-    <div className="w-full min-h-screen bg-white text-gray-800 px-6 py-10 font-sans">
+    <div className="w-full min-h-screen bg-white text-gray-800 font-sans">
       <NavBar />
       
       <div className="max-w-4xl mx-auto text-start">
