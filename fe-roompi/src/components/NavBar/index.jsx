@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import '../../assets/css/global.css';
 import './index.css';
 import logo from '../../assets/images/logo.png';
@@ -15,21 +14,22 @@ function NavBar() {
             <div className="flex items-center">
                 <div className="flex items-center gap-13">
                     {/* Navigation Links */}
-                    <Link to="/" className="primary hind-madurai-regular">Home</Link>
-                    <Link to="/rooms" className="text-black hind-madurai-regular">Rooms</Link>
-                    <Link to="/contact" className="text-black hind-madurai-regular">Contact</Link>
+                    <a href="/" className="nav-link primary hind-madurai-regular">Home</a>
+                    <a href="/rooms" className="nav-link text-black hind-madurai-regular">Rooms</a>
+                    <a href="/history" className="nav-link text-black hind-madurai-regular">History</a>
 
                     {/* Vertical Divider + Profile Link */}
-                    <div className="h-6 border-l border-teal-600" />
-
-                    <Link to="/profile" className="flex items-center gap-2">
+                    <div className="nav-divider h-6 border-l border-teal-600" />
+                    
+                    {/* Profile */}
+                    <a href="/profile" className="flex items-center gap-2">
                         <span className="hind-madurai-semibold">Bob Smith</span>
                         <img
                             src="https://i.pravatar.cc/32"
                             alt="Profile"
                             className="w-8 h-8 rounded-full object-cover"
                         />
-                    </Link>
+                    </a>
                 </div>
             </div>
         </nav>

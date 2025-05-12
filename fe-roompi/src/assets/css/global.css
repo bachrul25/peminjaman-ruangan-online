@@ -37,3 +37,15 @@
 .secondary {
   color: #DDEDFD;
 }
+
+.grey {
+  color: #8C8C8C
+}
+
+.bg-primary {
+  background-color: #008395;
+}
+
+.bg-secondary {
+  background-color: #DDEDFD;
+}

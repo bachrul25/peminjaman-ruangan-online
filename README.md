@@ -23,7 +23,19 @@ Project akhir fullstack web developer - peminjaman ruangan secara online
 4. Ketik `git push -u origin nama-branch`
 5. nama-branch diisi branch yang saat ini aktif
 
-### E. Simple Way
+### E. Pull From Master
+1. Buka terminal VSCode
+2. Switch ke branch masing-masing
+3. Ketik `git pull origin Master` untuk mengambil pembaruan dari branch Master ke branch masing-masing
+
+### F. Merge
+1. Buka terminal VSCode
+2. Switch ke branch Master
+3. Ketik `git merge nama-branch` untuk menggabungkan perubahan dari branch tertentu
+4. nama-branch diisi branch yang ingin digabungkan
+5. Setelah itu, ketik `git push -u origin Master`
+
+### G. Simple Way to Commit
 1. Tekan icon `git` yang ada di VSCode (biasanya ada dibawah icon `search`)
 2. Masukkan pesan perubahannya atau bisa menggunakan extension GitHub Copilot untuk auto-generate pesan commit
 3. Tekan tombol `Commit` dan tombol `Sync` setelah commit
