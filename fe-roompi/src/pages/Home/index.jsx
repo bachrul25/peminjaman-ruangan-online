@@ -6,6 +6,10 @@ import Hero from '../../components/Hero';
 import Features from '../../components/Features';
 import About from '../../components/About';
 import Top from '../../components/Top';
+import Testimonials from '../../components/Testimonials';
+import Newsletter from '../../components/Newsletter';
+import Partner from '../../components/Partner';
+import Footer from '../../components/Footer';
 
 function Home() {
   return (
@@ -19,7 +23,14 @@ function Home() {
         <About />
 
         <Top />
-        <h1 className='hind-madurai-light'>Hallo</h1>
+
+        <Testimonials />
+
+        <Newsletter />
+
+        <Partner />
+
+        <Footer />
     </div>
   );
 }
