@@ -23,7 +23,6 @@ function App() {
         <Route path="/detail-room" element={<DetailRoom/>} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="/history" element={<History />} />
-        <Route path="/rooms" element={<RoomsPage />} />
       </Routes>
     </Router>
   )
