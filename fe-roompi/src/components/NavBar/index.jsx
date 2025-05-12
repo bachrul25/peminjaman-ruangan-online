@@ -1,35 +1,57 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router';
 import '../../assets/css/global.css';
-import './index.css';
 import logo from '../../assets/images/logo.png';
 
 function NavBar() {
+    const location = useLocation();
+
+    const navItems = [
+        { name: "Home", path: "/" },
+        { name: "Rooms", path: "/rooms" },
+        { name: "History", path: "/history" },
+    ];
+
     return (
-        <nav className="navbar flex items-center justify-between py-4 bg-white">
+        <nav className="navbar flex items-center sticky top-0 z-50 justify-between py-4 px-[160px] bg-white">
             {/* Logo */}
-            <div className="flex items-center gap-1 text-teal-700 font-bold text-xl">
-                <img src={logo} alt="Logo" className="w-24" />
+            <div className="flex items-center gap-1">
+                <Link to="/">
+                    <img src={logo} alt="Logo" className="w-24" />
+                </Link>
             </div>
 
             <div className="flex items-center">
                 <div className="flex items-center gap-13">
                     {/* Navigation Links */}
-                    <a href="/" className="nav-link primary hind-madurai-regular">Home</a>
-                    <a href="/rooms" className="nav-link text-black hind-madurai-regular">Rooms</a>
-                    <a href="/history" className="nav-link text-black hind-madurai-regular">History</a>
+                    <ul className="flex space-x-13">
+                        {navItems.map((item) => (
+                        <li key={item.path}>
+                            <Link
+                            to={item.path}
+                            className={`text-lg hind-madurai-regular ${
+                                location.pathname === item.path
+                                ? "primary"
+                                : "text-black hover:primary"
+                            }`}
+                            >
+                            {item.name}
+                            </Link>
+                        </li>
+                        ))}
+                    </ul>
 
                     {/* Vertical Divider + Profile Link */}
-                    <div className="nav-divider h-6 border-l border-teal-600" />
-                    
-                    {/* Profile */}
-                    <a href="/profile" className="flex items-center gap-2">
+                    <div className="h-6 border-l border-teal-600" />
+
+                    <Link to="/profile" className="flex items-center gap-2">
                         <span className="hind-madurai-semibold">Bob Smith</span>
                         <img
                             src="https://i.pravatar.cc/32"
                             alt="Profile"
                             className="w-8 h-8 rounded-full object-cover"
                         />
-                    </a>
+                    </Link>
                 </div>
             </div>
         </nav>
