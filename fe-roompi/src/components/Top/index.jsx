@@ -1,6 +1,7 @@
 import React from "react";
 import RoomCard from "../RoomCard";
 import imgDummy from "../../assets/images/img-dummy.png";
+import { Link } from "react-router";
 
 
 // Contoh data dummy
@@ -53,7 +54,9 @@ const Top = () => {
                     </p>
                 </div>
                 <button className="mt-4 md:mt-0 bg-primary hind-madurai-bold text-base text-white px-6 py-2 rounded-full flex items-center gap-2">
-                    See all →
+                    <Link to="/rooms" className="text-white">
+                        See all →
+                    </Link>
                 </button>
             </div>
 
