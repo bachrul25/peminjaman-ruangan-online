@@ -24,7 +24,7 @@ function NavBar() {
             <div className="flex items-center">
                 <div className="flex items-center gap-13">
                     {/* Navigation Links */}
-                    <ul className="flex space-x-6">
+                    <ul className="flex space-x-13">
                         {navItems.map((item) => (
                         <li key={item.path}>
                             <Link
