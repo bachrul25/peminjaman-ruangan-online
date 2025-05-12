@@ -7,6 +7,7 @@ import BookingConfirmation from './pages/BookingConfirmation/BookingConfirmation
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import DetailRoom from './pages/DetailRoom/DetailRoom';
+import History from './pages/History/history';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/detail-room" element={<DetailRoom/>} />
         <Route path="/rooms" element={<Room />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+        <Route path="/history" element={<History />} />
         
 
       </Routes>
