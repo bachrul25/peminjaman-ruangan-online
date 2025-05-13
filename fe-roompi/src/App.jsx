@@ -6,7 +6,7 @@ import RoomsPage from './pages/RoomsPage';
 import BookingConfirmation from './pages/BookingConfirmation/BookingConfirmation';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
-import DetailRoom from './pages/DetailRoom/DetailRoom';
+import DetailRoom from './pages/DetailRoom';
 import History from './pages/History/history';
 
 
