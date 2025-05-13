@@ -32,7 +32,7 @@ function NavBar() {
                             className={`text-lg hind-madurai-regular ${
                                 location.pathname === item.path
                                 ? "primary"
-                                : "text-black hover:primary"
+                                : "text-black hover:text-teal-600"
                             }`}
                             >
                             {item.name}

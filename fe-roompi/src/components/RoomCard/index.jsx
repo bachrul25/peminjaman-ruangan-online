@@ -1,5 +1,6 @@
 import { FaUser, FaStar } from "react-icons/fa";
 import '../../assets/css/global.css';
+import { Link } from "react-router";
 
 const RoomCard = ({ room }) => {
     return (
@@ -19,9 +20,9 @@ const RoomCard = ({ room }) => {
             </div>
         </div>
         <p className="hind-madurai-regular text-lg mt-2" style={{ color: `#5E5E5E` }}>{room.type}</p>
-        <a href="#" className="text-lg hind-madurai-regular primary  mt-2 inline-block">
+        <Link to={'/detail-room'} className="text-lg hind-madurai-regular primary  mt-2 inline-block">
             See detail &gt;
-        </a>
+        </Link>
         <p className="hind-madurai-bold text-xl mt-3 text-black">Rp. {room.cost} /Session</p>
         <div className="mt-4 space-y-4">
             <button
