@@ -1,6 +1,7 @@
 import React from 'react';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 import NavBar from '../../components/NavBar';
+import Footer from "../../components/Footer";
 
 const sessionTimeMap = {
   'Sesi 1': { start: '09:00', end: '12:00' },
@@ -27,11 +28,11 @@ const History = () => {
   const now = new Date();
 
   return (
-    <div className="w-full min-h-screen bg-white text-gray-800 font-sans px-4 sm:px-6 md:px-8">
+    <div className="w-full min-h-screen bg-white">
       <NavBar />
 
-      <div className="max-w-4xl mx-auto flex flex-col items-center sm:items-start text-center sm:text-start mt-6">
-        <h2 className="text-xl sm:text-2xl font-semibold text-[#008B9A] mb-2">
+      <div className="flex flex-col items-center sm:items-start text-center sm:text-start mt-6  mb-52 px-[160px]">
+        <h2 className="text-2xl hind-madurai-bold primary mb-2">
           Transaction history
         </h2>
         <div className="w-full border-b-2 border-[#008B9A] mb-6"></div>
@@ -48,24 +49,28 @@ const History = () => {
           return (
             <div
               key={index}
-              className="border border-gray-300 rounded-md p-4 mb-6 shadow-sm bg-white w-full"
+              className="flex border border-gray-300 rounded-xl px-16 py-8 mb-6 shadow-sm bg-white w-full"
             >
-              <p className="font-semibold text-gray-900 mb-1 text-base sm:text-lg">
-                {trx.roomName}
-              </p>
-              <p className="text-sm text-gray-700 mb-1 break-words">{trx.address}</p>
-              <div className="flex items-center text-sm text-gray-600 mb-4 justify-center sm:justify-start flex-wrap">
-                <FaMapMarkerAlt className="mr-2 text-[#008B9A]" />
-                {`${trx.bookingDate}, ${trx.session} (${session.start} - ${session.end})`}
+              <div className='w-3/4'>
+                <p className="hind-madurai-bold primary mb-1 text-lg">
+                  {trx.roomName}
+                </p>
+                <p className="text-lg grey mb-1 break-words hind-madurai-regular">{trx.address}</p>
+                <div className="flex items-center text-lg grey mb-4 hind-madurai-regular justify-center sm:justify-start flex-wrap">
+                  <FaClock className="mr-2 primary" />
+                  {`${trx.bookingDate}, ${trx.session} (${session.start} - ${session.end})`}
+                </div>
               </div>
-              <div className="flex flex-wrap justify-center sm:justify-end gap-2">
+              
+              
+              <div className="grid grid-cols-1 w-1/4 justify-center sm:justify-end gap-2">
                 <button
                   disabled={!isCheckInEnabled}
                   className={`${
                     isCheckInEnabled
-                      ? 'bg-[#008B9A] hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
-                      : 'bg-gray-300 cursor-not-allowed'
-                  } text-white font-semibold text-sm md:text-base px-4 py-2 rounded transition duration-300`}
+                      ? 'bg-primary hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
+                      : 'bg-secondary cursor-not-allowed'
+                  } text-white hind-madurai-bold text-lg px-4 py-2 rounded transition duration-300`}
                 >
                   CHECK IN
                 </button>
@@ -73,9 +78,9 @@ const History = () => {
                   disabled={!isCheckOutEnabled}
                   className={`${
                     isCheckOutEnabled
-                      ? 'bg-[#008B9A] hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
-                      : 'bg-gray-300 cursor-not-allowed'
-                  } text-white font-semibold text-sm md:text-base px-4 py-2 rounded transition duration-300`}
+                      ? 'bg-primary hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
+                      : 'bg-secondary cursor-not-allowed'
+                  } text-white hind-madurai-bold text-lg px-4 py-2 rounded transition duration-300`}
                 >
                   CHECK OUT
                 </button>
@@ -84,6 +89,8 @@ const History = () => {
           );
         })}
       </div>
+
+      <Footer />
     </div>
   );
 };

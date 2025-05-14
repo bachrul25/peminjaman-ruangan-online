@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router';
 import Home from './pages/Home';
-import Profile from './pages/Profile/profile';
+import Profile from './pages/Profile';
 import RoomsPage from './pages/RoomsPage';
-import Login from './pages/Login/Login';
-import Register from './pages/Register/Register';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import DetailRoom from './pages/DetailRoom';
-import History from './pages/History/history';
+import History from './pages/History';
 import BookingSuccess from './pages/BookingSuccess';
 
 
