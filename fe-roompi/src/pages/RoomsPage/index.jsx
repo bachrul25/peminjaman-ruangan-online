@@ -41,7 +41,7 @@ function RoomsPage() {
                 
                     {/*  Search Form  */}
                     <form action="" method="post">
-                        <div className="bg-white rounded-full grid grid-cols-1 md:grid-cols-4 gap-4 items-center p-6">
+                        <div className="bg-white rounded-full grid grid-cols-1 md:grid-cols-4 gap-4 items-center px-6 py-3">
                             <div className="flex items-center">
                                 <img src={ location } alt="" className="h-8" />
                                 <div className="ml-3">
