@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 const RoomCard = ({ room }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md p-4 flex flex-col space-y-4">
+    <div className="bg-white rounded-xl shadow-md p-4 flex flex-col">
       {/* Gambar + Rating */}
       <div className="relative rounded-xl overflow-hidden">
         <img
@@ -19,7 +19,7 @@ const RoomCard = ({ room }) => {
       </div>
 
       {/* Judul & Kapasitas */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-black">
+      <div className="flex flex-row justify-between items-start sm:items-center text-black mt-5 mb-2.5">
         <span className="hind-madurai-bold text-lg sm:text-xl">{room.title}</span>
         <div className="flex items-center gap-2 text-sm sm:text-base mt-1 sm:mt-0">
           <FaUser />
@@ -28,18 +28,18 @@ const RoomCard = ({ room }) => {
       </div>
 
       {/* Tipe */}
-      <p className="hind-madurai-regular text-sm sm:text-lg text-gray-600">{room.type}</p>
+      <p className="hind-madurai-regular text-sm text-gray-600 mb-1">{room.type}</p>
 
       {/* Link Detail */}
       <Link
-        to={"/detail-room"}
-        className="text-sm sm:text-base hind-madurai-regular text-blue-600 hover:underline mt-1"
+        to={`/detail-room/${room.id}`}
+        className="text-sm sm:text-base hind-madurai-regular text-blue-600 hover:underline"
       >
         See detail &gt;
       </Link>
 
       {/* Harga */}
-      <p className="hind-madurai-bold text-lg sm:text-xl text-black">
+      <p className="hind-madurai-bold text-lg sm:text-xl text-black my-4">
         Rp. {room.cost} /Session
       </p>
 

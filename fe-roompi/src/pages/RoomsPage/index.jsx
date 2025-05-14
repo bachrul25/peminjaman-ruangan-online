@@ -5,82 +5,17 @@ import location from '../../assets/images/location.png';
 import search from '../../assets/images/search.png';
 import Footer from "../../components/Footer";
 import RoomCard from "../../components/RoomCard";
-import imgDummy from "../../assets/images/img-dummy.png";
 import Newsletter from "../../components/Newsletter";
 import { useState } from "react";
 import Pagination from "../../components/Pagination";
-
-// Contoh data dummy
-const rooms = [
-    {
-        id: 1,
-        title: "Deluxe",
-        type: "Deluxe",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 10,
-        activeSession: 1,
-    },
-    {
-        id: 2,
-        title: "Suite",
-        type: "Suite",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 7,
-        activeSession: 1,
-    },
-    {
-        id: 3,
-        title: "Premium",
-        type: "Premium",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 15,
-        activeSession: 1,
-    },
-    {
-        id: 4,
-        title: "Deluxe",
-        type: "Deluxe",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 10,
-        activeSession: 1,
-    },
-    {
-        id: 5,
-        title: "Suite",
-        type: "Suite",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 7,
-        activeSession: 1,
-    },
-    {
-        id: 6,
-        title: "Premium",
-        type: "Premium",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 15,
-        activeSession: 1,
-    },
-];
-
+import rooms from "../../Utils/dummy";
 
 
 function RoomsPage() {
 
     // State pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const roomsPerPage = 3;
+    const roomsPerPage = 6;
     const totalPages = Math.ceil(rooms.length / roomsPerPage);
 
     // Data yang ditampilkan berdasarkan halaman

@@ -3,10 +3,14 @@ import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import imgDummy from "../../assets/images/img-dummy.png";
 import { FaChevronLeft, FaMapMarkerAlt, FaUser } from 'react-icons/fa';
+import { Link, useParams } from 'react-router';
 
-const BookingRoom = () => {
+function RoomDetail({ rooms }) {
   // const [selectedDate, setSelectedDate] = useState('');
   const [selectedSession, setSelectedSession] = useState('sesi1');
+
+  const { id } = useParams(); // id diambil dari URL
+  const room = rooms.find(r => r.id === parseInt(id));
 
   return (
     <div>
@@ -32,10 +36,10 @@ const BookingRoom = () => {
 
         {/* Nama Ruangan dan Kapasitas */}
         <div className="flex items-center justify-between mt-8 pb-4 border-b-2 border-primary">
-          <h2 className="text-2xl hind-madurai-bold primary">Bohe Room</h2>
+          <h2 className="text-2xl hind-madurai-bold primary">{room?.title}</h2>
           <div className="flex items-center primary text-xl hind-madurai-bold">
             <FaUser />
-            15
+            {room?.capacity}
           </div>
         </div>
 
@@ -94,9 +98,11 @@ const BookingRoom = () => {
 
         {/* Tombol Booking */}
         <div className="mt-10">
-          <button className="w-full bg-primary text-white hind-madurai-bold text-xl py-3 rounded-lg hover:bg-teal-800 transition">
-            BOOKING
-          </button>
+          <Link to={`/booking-success/${room?.id}`}>
+            <button className="w-full bg-primary text-white hind-madurai-bold text-xl py-3 rounded-lg hover:bg-teal-800 transition">
+              BOOKING
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -105,4 +111,4 @@ const BookingRoom = () => {
   );
 };
 
-export default BookingRoom;
+export default RoomDetail;
