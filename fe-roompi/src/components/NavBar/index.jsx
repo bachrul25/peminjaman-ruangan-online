@@ -50,11 +50,6 @@ function NavBar() {
           <div className="h-6 border-l border-teal-600" />
           <Link to="/profile" className="flex items-center gap-2">
             <span className="hind-madurai-semibold">Bob Smith</span>
-            <img
-              src="https://i.pravatar.cc/32"
-              alt="Profile"
-              className="w-8 h-8 rounded-full object-cover"
-            />
           </Link>
         </div>
       </div>
@@ -83,11 +78,6 @@ function NavBar() {
             onClick={() => setIsOpen(false)}
           >
             <span className="hind-madurai-semibold">Bob Smith</span>
-            <img
-              src="https://i.pravatar.cc/32"
-              alt="Profile"
-              className="w-8 h-8 rounded-full object-cover"
-            />
           </Link>
         </div>
       )}
