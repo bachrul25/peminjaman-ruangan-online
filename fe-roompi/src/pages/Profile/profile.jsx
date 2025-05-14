@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaUserCircle } from 'react-icons/fa';
 import NavBar from '../../components/NavBar';
 
 const Profile = () => {
@@ -15,41 +15,47 @@ const Profile = () => {
   return (
     <>
       <NavBar />
-      <div className="w-full min-h-screen bg-white text-gray-800 px-6 py-10 hind-madurai-regular">
-        <div className="max-w-4xl mx-auto text-start">
-          <h2 className="text-xl md:text-2xl font-semibold text-[#008395] mb-2 hind-madurai-semibold">
-            Account
-          </h2>
-          <div className="w-full border-b-2 border-[#008395] mb-6" />
+      <div className="w-full min-h-screen bg-white flex items-center justify-center px-4 py-10 font-hind">
+        <div className="w-full max-w-2xl bg-gray-50 shadow-xl rounded-2xl p-6 sm:p-10">
+          {/* Header */}
+          <div className="flex flex-col items-center mb-6">
+            <FaUserCircle className="text-[#008395] text-6xl mb-3" />
+            <h2 className="text-xl sm:text-2xl font-semibold text-[#008395]">My Profile</h2>
+            <p className="text-sm text-gray-600">View and manage your account details</p>
+          </div>
 
-          <div className="flex justify-end mb-6">
-            <button className="flex items-center gap-2 text-sm text-gray-700 hover:underline">
+          {/* Edit Button */}
+          <div className="flex justify-end mb-4">
+            <button className="flex items-center gap-2 text-sm text-[#008395] hover:underline font-medium">
               <FaEdit />
               Edit Profile
             </button>
           </div>
 
-          <table className="w-full text-sm md:text-base">
-            <tbody>
-              {[
-                ['Username', userData.username],
-                ['Full Name', userData.fullName],
-                ['Birth Date', userData.birthDate],
-                ['Phone Number', userData.phoneNumber],
-                ['Email', userData.email],
-                ['Gender', userData.gender],
-              ].map(([label, value], i) => (
-                <tr key={i} className="h-12">
-                  <td className="font-medium w-40 text-[#008395]">{label}</td>
-                  <td className="w-2">:</td>
-                  <td>{value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Data List */}
+          <div className="space-y-4">
+            {[
+              ['Username', userData.username],
+              ['Full Name', userData.fullName],
+              ['Birth Date', userData.birthDate],
+              ['Phone Number', userData.phoneNumber],
+              ['Email', userData.email],
+              ['Gender', userData.gender],
+            ].map(([label, value], i) => (
+              <div
+                key={i}
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white rounded-xl px-4 py-3 border border-gray-200"
+              >
+                <span className="text-sm sm:text-base font-medium text-[#008395]">{label}</span>
+                <span className="text-sm sm:text-base text-gray-700 mt-1 sm:mt-0">{value}</span>
+              </div>
+            ))}
+          </div>
 
-          {/* Garis bawah akhir */}
-          <div className="mt-12 border-b-2 border-[#008395] w-full" />
+          {/* Footer */}
+          <div className="mt-8 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
+            Last updated just now
+          </div>
         </div>
       </div>
     </>
