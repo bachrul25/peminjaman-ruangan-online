@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import DetailRoom from './pages/DetailRoom';
 import History from './pages/History';
 import BookingSuccess from './pages/BookingSuccess';
+import rooms from './Utils/dummy';
 
 
 
@@ -21,8 +22,8 @@ function App() {
         <Route path="/rooms" element={<RoomsPage />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
-        <Route path="/detail-room" element={<DetailRoom/>} />
-        <Route path="/booking-success" element={<BookingSuccess/>}/>
+        <Route path="/detail-room/:id" element={<DetailRoom rooms={rooms} />} />
+        <Route path="/booking-success/:id" element={<BookingSuccess/>}/>
         <Route path="/history" element={<History />} />
       </Routes>
     </Router>

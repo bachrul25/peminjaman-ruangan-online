@@ -1,43 +1,12 @@
 import React from "react";
 import RoomCard from "../RoomCard";
-import imgDummy from "../../assets/images/img-dummy.png";
 import { Link } from "react-router";
-
-// Data dummy
-const rooms = [
-    {
-        id: 1,
-        title: "Deluxe",
-        type: "Deluxe",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 10,
-        activeSession: 1,
-    },
-    {
-        id: 2,
-        title: "Suite",
-        type: "Suite",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 7,
-        activeSession: 1,
-    },
-    {
-        id: 3,
-        title: "Premium",
-        type: "Premium",
-        cost: 320000,
-        image: imgDummy,
-        rating: 4.8,
-        capacity: 15,
-        activeSession: 1,
-    },
-];
+import rooms from "../../Utils/dummy";
 
 const Top = () => {
+
+    
+
     return (
         <section className="bg-white pt-16 pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-[160px]">
             <div className="max-w-7xl mx-auto">
@@ -60,9 +29,12 @@ const Top = () => {
 
                 {/* Grid Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {rooms.map((room) => (
-                        <RoomCard key={room.id} room={room} />
-                    ))}
+                    {rooms
+                        .sort((a, b) => b.rating - a.rating) // Urutkan berdasarkan rating tertinggi
+                        .slice(0, 3)                         // Ambil 3 data teratas
+                        .map((room) => (
+                            <RoomCard key={room.id} room={room} />
+                        ))}
                 </div>
             </div>
         </section>
