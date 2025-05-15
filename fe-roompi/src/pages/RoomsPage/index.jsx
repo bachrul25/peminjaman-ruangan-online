@@ -34,113 +34,114 @@ function RoomsPage() {
         <div className="bg-white">
             <NavBar />
 
-            <div className="mt-4 mb-14 left-0 right-0 z-10 flex flex-col items-center text-white text-center px-[160px]">
+            <div className="mt-4 mb-14 left-0 right-0 z-10 flex flex-col items-center text-white text-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px]">
 
-                {/*  Subtext  */}
-                <div className="bg-secondary text-black rounded-4xl px-10 py-10 w-full shadow-lg">
-                
-                    {/*  Search Form  */}
-                    <form action="" method="post">
-                        <div className="bg-white rounded-full grid grid-cols-1 md:grid-cols-4 gap-4 items-center px-6 py-3">
-                            <div className="flex items-center">
-                                <img src={ location } alt="" className="h-8" />
-                                <div className="ml-3">
-                                    <label className="block text-base hind-madurai-bold text-start">
-                                        Categories
-                                    </label>
-                                    <select
-                                        id="categories"
-                                        name="categories"
-                                        class="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
-                                        >
-                                        <option value="">Add room categories</option>
-                                        <option value="option1">Option One</option>
-                                        <option value="option2">Option Two</option>
-                                        <option value="option3">Option Three</option>
-                                        <option value="option4">Option Four</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="flex items-center">
-                                <img src={ calender } alt="" className="h-8" />
-                                <div className="ml-3">
-                                    <label className="block text-base hind-madurai-bold text-start">
-                                        Check in
-                                    </label>
-                                    <input
-                                        type="date"
-                                        id="dateCheckIn"
-                                        name='dateCheckIn'
-                                        className="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer" />
-                                </div>
-                            </div>
-                            <div className="flex items-center">
-                                <img src={ calender } alt="" className="h-8" />
-                                <div className="ml-3">
-                                    <label className="block text-base hind-madurai-bold text-start">
-                                        Check out
-                                    </label>
-                                    <input 
-                                        type="date" 
-                                        id="dateCheckOut"
-                                        name='dateCheckOut'
-                                        className="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer" />
-                                </div>
-                            </div>
-                            <div className="flex items-center">
-                                <img src={ guest } alt="" className="h-8" />
-                                <div className="ml-3">
-                                    <label className="block text-base hind-madurai-bold text-start">
-                                        Guest
-                                    </label>
-                                    <input 
-                                    type="text"
-                                    id='guest'
-                                    name='guest' 
-                                    placeholder="Add guests" 
-                                    className="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer" />
-                                </div>
-                                <button className="p-4 rounded-full bg-primary text-white">
-                                    <img src={ search } alt="" />
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div className="px-[160px] mt-14">
-                <div className="flex items-center justify-between mb-11">
-                    <h2 className="text-3xl W-3/4 hind-madurai-bold text-black">
-                        ROOMPI'S ROOM
-                    </h2>
-                    <select
+            <div className="bg-secondary text-black rounded-4xl px-4 sm:px-6 md:px-10 py-6 sm:py-8 md:py-10 w-full shadow-lg">
+                <form action="" method="post">
+                <div className="bg-white rounded-3xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-center px-4 sm:px-6 py-4">
+                    {/* Categories */}
+                    <div className="flex items-center w-full">
+                    <img src={location} alt="" className="h-6 sm:h-8" />
+                    <div className="ml-2 sm:ml-3 w-full">
+                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Categories</label>
+                        <select
                         id="categories"
                         name="categories"
-                        class="w-1/4 hind-madurai-regular text-base text-black focus:outline-none cursor-pointer border-1 border-black rounded-lg px-4 py-2"
+                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
                         >
-                        <option value="">Price</option>
+                        <option value="">Add room categories</option>
                         <option value="option1">Option One</option>
                         <option value="option2">Option Two</option>
                         <option value="option3">Option Three</option>
                         <option value="option4">Option Four</option>
-                    </select>
+                        </select>
+                    </div>
+                    </div>
+
+                    {/* Check In */}
+                    <div className="flex items-center w-full">
+                    <img src={calender} alt="" className="h-6 sm:h-8" />
+                    <div className="ml-2 sm:ml-3 w-full">
+                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Check in</label>
+                        <input
+                        type="date"
+                        id="dateCheckIn"
+                        name="dateCheckIn"
+                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
+                        />
+                    </div>
+                    </div>
+
+                    {/* Check Out */}
+                    <div className="flex items-center w-full">
+                    <img src={calender} alt="" className="h-6 sm:h-8" />
+                    <div className="ml-2 sm:ml-3 w-full">
+                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Check out</label>
+                        <input
+                        type="date"
+                        id="dateCheckOut"
+                        name="dateCheckOut"
+                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
+                        />
+                    </div>
+                    </div>
+
+                    {/* Guest */}
+                    <div className="flex items-center w-full">
+                    <img src={guest} alt="" className="h-6 sm:h-8" />
+                    <div className="ml-2 sm:ml-3 w-full">
+                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Guest</label>
+                        <input
+                        type="text"
+                        id="guest"
+                        name="guest"
+                        placeholder="Add guests"
+                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
+                        />
+                    </div>
+                    <button className="ml-2 p-3 sm:p-4 rounded-full bg-primary text-white">
+                        <img src={search} alt="" className="h-4 sm:h-5" />
+                    </button>
+                    </div>
                 </div>
-
-                {/* Grid Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {currentRooms.map((room) => (
-                    <RoomCard key={room.id} room={room} />
-                ))}
-                </div>
-
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
-
+                </form>
             </div>
+            </div>
+
+            {/* Grid Layout dan Header */}
+            <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px] mt-10 sm:mt-12 md:mt-14">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-10 md:mb-11 gap-4">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl hind-madurai-bold text-black">
+                ROOMPI'S ROOM
+                </h2>
+                <select
+                id="sort"
+                name="sort"
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 hind-madurai-regular text-sm sm:text-base text-black focus:outline-none border border-black rounded-lg px-4 py-2"
+                >
+                <option value="">Price</option>
+                <option value="option1">Option One</option>
+                <option value="option2">Option Two</option>
+                <option value="option3">Option Three</option>
+                <option value="option4">Option Four</option>
+                </select>
+            </div>
+
+            {/* Grid Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+                {currentRooms.map((room) => (
+                <RoomCard key={room.id} room={room} />
+                ))}
+            </div>
+
+            {/* Pagination */}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+            />
+            </div>
+
 
             <Newsletter />
             
