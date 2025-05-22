@@ -39,7 +39,7 @@ const Testimonials = () => {
         <div className="max-w-7xl mx-auto text-center text-white mb-16">
           <h2 className="text-3xl md:text-5xl hind-madurai-bold">Testimonials</h2>
         </div>
-        <div className="flex flex-col gap-8 lg:flex-row lg:justify-center lg:items-stretch">
+        <div className="flex flex-col gap-16 xl:gap-8 lg:flex-row lg:justify-center lg:items-stretch">
           {testimonials.map((testimonial, idx) => (
             <TestiCard key={idx} testimonial={testimonial} />
           ))}

@@ -31,8 +31,8 @@ const History = () => {
     <div className="w-full min-h-screen bg-white">
       <NavBar />
 
-      <div className="flex flex-col items-center sm:items-start text-center sm:text-start mt-6  mb-52 px-[160px]">
-        <h2 className="text-2xl hind-madurai-bold primary mb-2">
+      <div className="flex flex-col items-center sm:items-start text-center sm:text-start mt-6 mb-52 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px]">
+        <h2 className="text-2xl md:text-3xl hind-madurai-bold primary mb-2">
           Transaction history
         </h2>
         <div className="w-full border-b-2 border-[#008B9A] mb-6"></div>
@@ -49,28 +49,31 @@ const History = () => {
           return (
             <div
               key={index}
-              className="flex border border-gray-300 rounded-xl px-16 py-8 mb-6 shadow-sm bg-white w-full"
+              className="flex flex-col sm:flex-row border border-gray-300 rounded-xl px-6 sm:px-10 md:px-16 py-6 sm:py-8 mb-6 shadow-sm bg-white w-full gap-6 sm:gap-0"
             >
-              <div className='w-3/4'>
-                <p className="hind-madurai-bold primary mb-1 text-lg">
+              {/* Konten Deskripsi */}
+              <div className='w-full sm:w-3/4'>
+                <p className="hind-madurai-bold primary mb-1 text-lg md:text-xl">
                   {trx.roomName}
                 </p>
-                <p className="text-lg grey mb-1 break-words hind-madurai-regular">{trx.address}</p>
-                <div className="flex items-center text-lg grey mb-4 hind-madurai-regular justify-center sm:justify-start flex-wrap">
+                <p className="text-base md:text-lg grey mb-1 break-words hind-madurai-regular">
+                  {trx.address}
+                </p>
+                <div className="flex items-center text-base md:text-lg grey mb-4 hind-madurai-regular justify-center sm:justify-start flex-wrap">
                   <FaClock className="mr-2 primary" />
                   {`${trx.bookingDate}, ${trx.session} (${session.start} - ${session.end})`}
                 </div>
               </div>
-              
-              
-              <div className="grid grid-cols-1 w-1/4 justify-center sm:justify-end gap-2">
+
+              {/* Tombol Check In / Out */}
+              <div className="w-full sm:w-1/4 flex flex-col justify-center items-center sm:items-end gap-3">
                 <button
                   disabled={!isCheckInEnabled}
                   className={`${
                     isCheckInEnabled
                       ? 'bg-primary hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
                       : 'bg-secondary cursor-not-allowed'
-                  } text-white hind-madurai-bold text-lg px-4 py-2 rounded transition duration-300`}
+                  } text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded transition duration-300 w-full sm:w-auto`}
                 >
                   CHECK IN
                 </button>
@@ -80,7 +83,7 @@ const History = () => {
                     isCheckOutEnabled
                       ? 'bg-primary hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
                       : 'bg-secondary cursor-not-allowed'
-                  } text-white hind-madurai-bold text-lg px-4 py-2 rounded transition duration-300`}
+                  } text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded transition duration-300 w-full sm:w-auto`}
                 >
                   CHECK OUT
                 </button>
@@ -89,6 +92,7 @@ const History = () => {
           );
         })}
       </div>
+
 
       <Footer />
     </div>
