@@ -38,70 +38,59 @@ function RoomsPage() {
 
             <div className="bg-secondary text-black rounded-4xl px-4 sm:px-6 md:px-10 py-6 sm:py-8 md:py-10 w-full shadow-lg">
                 <form action="" method="post">
-                <div className="bg-white rounded-3xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-center px-4 sm:px-6 py-4">
+                <div className="bg-white rounded-3xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-center px-4 sm:px-6 py-4">
                     {/* Categories */}
-                    <div className="flex items-center w-full">
-                    <img src={location} alt="" className="h-6 sm:h-8" />
-                    <div className="ml-2 sm:ml-3 w-full">
-                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Categories</label>
-                        <select
-                        id="categories"
-                        name="categories"
-                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
-                        >
-                        <option value="">Add room categories</option>
-                        <option value="option1">Option One</option>
-                        <option value="option2">Option Two</option>
-                        <option value="option3">Option Three</option>
-                        <option value="option4">Option Four</option>
-                        </select>
-                    </div>
+                    <div className="flex items-center">
+                        <img src={location} alt="" className="h-6 sm:h-8" />
+                        <div className="ml-2 sm:ml-3 w-full">
+                            <label className="block text-sm sm:text-base hind-madurai-bold text-start">Categories</label>
+                            <select
+                                id="categories"
+                                name="categories"
+                                className="w-full hind-madurai-regular text-sm sm:text-base grey focus:outline-none cursor-pointer"
+                            >
+                                <option value="">Add room categories</option>
+                                <option value="option1">Option One</option>
+                                <option value="option2">Option Two</option>
+                                <option value="option3">Option Three</option>
+                                <option value="option4">Option Four</option>
+                            </select>
+                        </div>
                     </div>
 
                     {/* Check In */}
-                    <div className="flex items-center w-full">
-                    <img src={calender} alt="" className="h-6 sm:h-8" />
-                    <div className="ml-2 sm:ml-3 w-full">
-                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Check in</label>
-                        <input
-                        type="date"
-                        id="dateCheckIn"
-                        name="dateCheckIn"
-                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
-                        />
-                    </div>
+                    <div className="flex items-center">
+                        <img src={calender} alt="" className="h-6 sm:h-8" />
+                        <div className="ml-2 sm:ml-3 w-full">
+                            <label className="block text-sm sm:text-base hind-madurai-bold text-start">Date</label>
+                            <input
+                                type="date"
+                                id="dateCheckIn"
+                                name="dateCheckIn"
+                                className="w-full hind-madurai-regular text-sm sm:text-base grey focus:outline-none cursor-pointer"
+                            />
+                        </div>
                     </div>
 
-                    {/* Check Out */}
-                    <div className="flex items-center w-full">
-                    <img src={calender} alt="" className="h-6 sm:h-8" />
-                    <div className="ml-2 sm:ml-3 w-full">
-                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Check out</label>
-                        <input
-                        type="date"
-                        id="dateCheckOut"
-                        name="dateCheckOut"
-                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
-                        />
-                    </div>
-                    </div>
 
                     {/* Guest */}
-                    <div className="flex items-center w-full">
-                    <img src={guest} alt="" className="h-6 sm:h-8" />
-                    <div className="ml-2 sm:ml-3 w-full">
-                        <label className="block text-sm sm:text-base hind-madurai-bold text-start">Guest</label>
-                        <input
-                        type="text"
-                        id="guest"
-                        name="guest"
-                        placeholder="Add guests"
-                        className="w-full hind-madurai-regular text-sm sm:text-base text-gray-700 focus:outline-none cursor-pointer"
-                        />
-                    </div>
-                    <button className="ml-2 p-3 sm:p-4 rounded-full bg-primary text-white">
-                        <img src={search} alt="" className="h-4 sm:h-5" />
-                    </button>
+                    <div className="flex items-center">
+                        <img src={guest} alt="" className="h-6 sm:h-8" />
+                        <div className="ml-2 sm:ml-3 w-full">
+                            <label className="block text-sm sm:text-base hind-madurai-bold text-start">Session</label>
+                            <select
+                                id="session"
+                                name="session"
+                                class="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
+                                >
+                                <option value="">Choose Session</option>
+                                <option value="1">Session 1</option>
+                                <option value="2">Session 2</option>
+                            </select>
+                        </div>
+                        <button className="ml-2 p-3 rounded-full bg-primary text-white">
+                            <img src={search} alt="" className="" />
+                        </button>
                     </div>
                 </div>
                 </form>
