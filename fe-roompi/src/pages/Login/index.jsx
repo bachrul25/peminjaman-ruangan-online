@@ -1,8 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', formData);
+      
+      if (response.data.success) {
+        // Simpan token di localStorage
+        localStorage.setItem('token', response.data.token);
+        // Redirect ke dashboard atau halaman setelah login
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+    }
+  };
+
   return (
     <div>
       <NavBar />
@@ -22,7 +56,13 @@ const Login = () => {
             Login with a registered account
           </p>
 
-          <form className="space-y-4">
+          {error && (
+            <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-center">
+              {error}
+            </div>
+          )}
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Email input */}
             <div>
               <label className="block text-base sm:text-lg text-left hind-madurai-regular text-black mb-1">
@@ -30,9 +70,12 @@ const Login = () => {
               </label>
               <input
                 type="email"
+                name="email"
                 className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-main text-base sm:text-lg grey"
                 placeholder="e.g. someone@gmail.com"
                 required
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
 
@@ -43,9 +86,12 @@ const Login = () => {
               </label>
               <input
                 type="password"
+                name="password"
                 className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-main text-base sm:text-lg grey"
                 placeholder="Type your password"
                 required
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
 
