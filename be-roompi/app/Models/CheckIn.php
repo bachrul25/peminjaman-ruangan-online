@@ -7,6 +7,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Seeders\CheckoutSeeder;
+use Database\Seeders\PinjamSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,6 +47,6 @@ class CheckIn extends Model
 
 	public function checkouts()
 	{
-		return $this->hasMany(Checkout::class, 'id_checkin');
+		return $this->hasMany(CheckoutSeeder::class, 'id_checkin');
 	}
 }

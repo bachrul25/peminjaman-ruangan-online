@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Seeders\CheckInSeeder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
