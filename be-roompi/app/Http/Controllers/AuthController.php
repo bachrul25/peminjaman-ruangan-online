@@ -48,6 +48,7 @@ class AuthController extends Controller
                 'name' => explode('@', $request->email)[0],
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role' => 'member',
             ]);
 
             // Generate token
@@ -87,9 +88,9 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $user = \App\Models\User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        if (!$user || !\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+        if (!$user || Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid email or password'
