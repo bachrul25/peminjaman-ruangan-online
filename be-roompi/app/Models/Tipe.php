@@ -1,21 +1,38 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use App\Models\Ruangan;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Class Tipe
+ * 
+ * @property int $id_category
+ * @property string $nama
+ * @property string $deskripsi
+ * 
+ * @property Collection|Ruangan[] $ruangans
+ *
+ * @package App\Models
+ */
 class Tipe extends Model
 {
-    use HasFactory;
+	protected $table = 'tipe';
+	protected $primaryKey = 'id_category';
+	public $timestamps = false;
 
-    protected $table = 'tipes';
-    protected $primaryKey = 'id_tipe';
-    protected $guarded = [];
+	protected $fillable = [
+		'nama',
+		'deskripsi'
+	];
 
-    public function ruangans()
-    {
-        return $this->hasMany(Ruangan::class, 'tipe_idtipe', 'id_tipe');
-    }
+	public function ruangans()
+	{
+		return $this->hasMany(Ruangan::class, 'id_category');
+	}
 }

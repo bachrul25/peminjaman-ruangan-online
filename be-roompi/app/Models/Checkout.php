@@ -1,19 +1,44 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use Database\Seeders\CheckInSeeder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Checkout
+ * 
+ * @property int $id_checkout
+ * @property int $id_checkin
+ * @property Carbon $waktu_checkout
+ * 
+ * @property CheckIn $check_in
+ *
+ * @package App\Models
+ */
 class Checkout extends Model
 {
-    use HasFactory;
+	protected $table = 'checkout';
+	protected $primaryKey = 'id_checkout';
+	public $timestamps = false;
 
-    protected $table = 'checkouts';
-    protected $primaryKey = 'id_checkout';
-    protected $guarded = [];
-    public function check_ins()
-    {
-        return $this->belongsTo(CheckIn::class, 'checkin_idcheckin', 'id_checkin');
-    }
+	protected $casts = [
+		'id_checkin' => 'int',
+		'waktu_checkout' => 'datetime'
+	];
+
+	protected $fillable = [
+		'id_checkin',
+		'waktu_checkout'
+	];
+
+	public function check_in()
+	{
+		return $this->belongsTo(CheckIn::class, 'id_checkin');
+	}
 }

@@ -1,33 +1,68 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Class Pinjam
+ * 
+ * @property int $id_pinjam
+ * @property int $id_user
+ * @property int $id_room
+ * @property int $id_sesi
+ * @property Carbon $tanggal_pinjam
+ * 
+ * @property Sesi $sesi
+ * @property User $user
+ * @property Ruangan $ruangan
+ * @property Collection|CheckIn[] $check_ins
+ *
+ * @package App\Models
+ */
 class Pinjam extends Model
 {
-    use HasFactory;
+	protected $table = 'pinjam';
+	protected $primaryKey = 'id_pinjam';
+	public $timestamps = false;
 
-    protected $table = 'pinjams';
-    protected $primaryKey = 'id_pinjam';
-    protected $guarded = [];
+	protected $casts = [
+		'id_user' => 'int',
+		'id_room' => 'int',
+		'id_sesi' => 'int',
+		'tanggal_pinjam' => 'datetime'
+	];
 
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'user_iduser', 'id');
-    }
-    public function ruangans()
-    {
-        return $this->belongsTo(Ruangan::class, 'ruangan_idruangan', 'id_ruangan');
-    }
-    public function sesis()
-    {
-        return $this->belongsTo(Sesi::class, 'sesi_idsesi', 'id_sesi');
-    }
-    public function check_ins()
-    {
-        return $this->hasMany(Checkin::class, 'pinjam_idpinjam', 'id_pinjam');
-    }
+	protected $fillable = [
+		'id_user',
+		'id_room',
+		'id_sesi',
+		'tanggal_pinjam'
+	];
 
+	public function sesi()
+	{
+		return $this->belongsTo(Sesi::class, 'id_sesi');
+	}
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'id_user');
+	}
+
+	public function ruangan()
+	{
+		return $this->belongsTo(Ruangan::class, 'id_room');
+	}
+
+	public function check_ins()
+	{
+		return $this->hasMany(CheckIn::class, 'id_pinjam');
+	}
 }

@@ -1,27 +1,56 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Class Ruangan
+ * 
+ * @property int $id_room
+ * @property int $id_category
+ * @property string $name_room
+ * @property string $alamat
+ * @property int $kapasitas
+ * @property int $harga
+ * 
+ * @property Tipe $tipe
+ * @property Collection|Pinjam[] $pinjams
+ *
+ * @package App\Models
+ */
 class Ruangan extends Model
 {
-    use HasFactory;
+	protected $table = 'ruangan';
+	protected $primaryKey = 'id_room';
+	public $timestamps = false;
 
-    protected $table = 'ruangans';
-    protected $primaryKey = 'id_ruangan';
-    protected $guarded = [];
+	protected $casts = [
+		'id_category' => 'int',
+		'kapasitas' => 'int',
+		'harga' => 'int'
+	];
 
-    public function tipes()
-    {
-        return $this->belongsTo(Tipe::class, 'tipe_idtipe', 'id_tipe');
-    }
+	protected $fillable = [
+		'id_category',
+		'name_room',
+		'alamat',
+		'kapasitas',
+		'harga'
+	];
 
+	public function tipe()
+	{
+		return $this->belongsTo(Tipe::class, 'id_category');
+	}
 
-    public function pinjams()
-    {
-        return $this->hasMany(Pinjam::class, 'ruangan_idruangan', 'id_ruangan');
-    }
-
+	public function pinjams()
+	{
+		return $this->hasMany(Pinjam::class, 'id_room');
+	}
 }

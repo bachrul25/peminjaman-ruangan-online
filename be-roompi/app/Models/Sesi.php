@@ -1,20 +1,46 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Sesi
+ * 
+ * @property int $id_sesi
+ * @property string $nama
+ * @property Carbon $start_time
+ * @property Carbon $end_time
+ * 
+ * @property Collection|Pinjam[] $pinjams
+ *
+ * @package App\Models
+ */
 class Sesi extends Model
 {
-    use HasFactory;
+	protected $table = 'sesi';
+	protected $primaryKey = 'id_sesi';
+	public $timestamps = false;
 
-    protected $table = 'sesis';
-    protected $primaryKey = 'id_sesi';
-    protected $guarded = [];
+	protected $casts = [
+		'start_time' => 'datetime',
+		'end_time' => 'datetime'
+	];
 
-    public function pinjams()
-    {
-        return $this->hasMany(Pinjam::class, 'sesi_idsesi', 'id_sesi');
-    }
+	protected $fillable = [
+		'nama',
+		'start_time',
+		'end_time'
+	];
+
+	public function pinjams()
+	{
+		return $this->hasMany(Pinjam::class, 'id_sesi');
+	}
 }

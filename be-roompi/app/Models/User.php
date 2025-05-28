@@ -1,41 +1,48 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * 
+ * @property int $id_user
+ * @property string $role
+ * @property string $nama
+ * @property string $email
+ * @property string $password
+ * @property string $telepon
+ * 
+ * @property Collection|Pinjam[] $pinjams
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    use HasFactory, Notifiable, HasApiTokens;
+	protected $table = 'user';
+	protected $primaryKey = 'id_user';
+	public $timestamps = false;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-    ];
+	protected $hidden = [
+		'password'
+	];
 
+	protected $fillable = [
+		'role',
+		'nama',
+		'email',
+		'password',
+		'telepon'
+	];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    public function pinjams()
-    {
-        return $this->hasMany(Pinjam::class, 'user_iduser', 'id');
-    }
+	public function pinjams()
+	{
+		return $this->hasMany(Pinjam::class, 'id_user');
+	}
 }
