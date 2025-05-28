@@ -14,7 +14,7 @@ class Tipe extends Model
     protected $primaryKey = 'id_tipe';
     protected $guarded = [];
 
-    public function ruangan()
+    public function ruangans()
     {
         return $this->hasMany(Ruangan::class, 'tipe_idtipe', 'id_tipe');
     }
