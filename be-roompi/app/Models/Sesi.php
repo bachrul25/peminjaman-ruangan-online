@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nama
  * @property Carbon $start_time
  * @property Carbon $end_time
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
  * @property Collection|Pinjam[] $pinjams
  *
@@ -24,9 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sesi extends Model
 {
-	protected $table = 'sesi';
+	protected $table = 'sesis';
 	protected $primaryKey = 'id_sesi';
-	public $timestamps = false;
 
 	protected $casts = [
 		'start_time' => 'datetime',
@@ -41,6 +42,6 @@ class Sesi extends Model
 
 	public function pinjams()
 	{
-		return $this->hasMany(Pinjam::class, 'id_sesi');
+		return $this->hasMany(Pinjam::class, 'sesi_idsesi');
 	}
 }

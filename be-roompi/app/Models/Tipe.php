@@ -6,15 +6,18 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Tipe
  * 
- * @property int $id_category
+ * @property int $id_tipe
  * @property string $nama
  * @property string $deskripsi
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
  * @property Collection|Ruangan[] $ruangans
  *
@@ -22,9 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tipe extends Model
 {
-	protected $table = 'tipe';
-	protected $primaryKey = 'id_category';
-	public $timestamps = false;
+	protected $table = 'tipes';
+	protected $primaryKey = 'id_tipe';
 
 	protected $fillable = [
 		'nama',
@@ -33,6 +35,6 @@ class Tipe extends Model
 
 	public function ruangans()
 	{
-		return $this->hasMany(Ruangan::class, 'id_category');
+		return $this->hasMany(Ruangan::class, 'tipe_idtipe');
 	}
 }

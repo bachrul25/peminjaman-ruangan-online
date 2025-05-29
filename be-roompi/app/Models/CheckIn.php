@@ -7,8 +7,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Database\Seeders\CheckoutSeeder;
-use Database\Seeders\PinjamSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,8 +14,10 @@ use Illuminate\Database\Eloquent\Model;
  * Class CheckIn
  * 
  * @property int $id_checkin
- * @property int $id_pinjam
+ * @property int $pinjam_idpinjam
  * @property Carbon $tanggal_checkin
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
  * @property Pinjam $pinjam
  * @property Collection|Checkout[] $checkouts
@@ -26,27 +26,26 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CheckIn extends Model
 {
-	protected $table = 'check_in';
+	protected $table = 'check_ins';
 	protected $primaryKey = 'id_checkin';
-	public $timestamps = false;
 
 	protected $casts = [
-		'id_pinjam' => 'int',
+		'pinjam_idpinjam' => 'int',
 		'tanggal_checkin' => 'datetime'
 	];
 
 	protected $fillable = [
-		'id_pinjam',
+		'pinjam_idpinjam',
 		'tanggal_checkin'
 	];
 
 	public function pinjam()
 	{
-		return $this->belongsTo(Pinjam::class, 'id_pinjam');
+		return $this->belongsTo(Pinjam::class, 'pinjam_idpinjam');
 	}
 
 	public function checkouts()
 	{
-		return $this->hasMany(CheckoutSeeder::class, 'id_checkin');
+		return $this->hasMany(Checkout::class, 'checkin_idcheckin');
 	}
 }

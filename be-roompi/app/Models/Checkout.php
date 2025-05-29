@@ -7,15 +7,18 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Database\Seeders\CheckInSeeder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Checkout
  * 
  * @property int $id_checkout
- * @property int $id_checkin
+ * @property int $checkin_idcheckin
  * @property Carbon $waktu_checkout
+ * @property int $denda
+ * @property string|null $keterangan
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
  * @property CheckIn $check_in
  *
@@ -23,22 +26,24 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Checkout extends Model
 {
-	protected $table = 'checkout';
+	protected $table = 'checkouts';
 	protected $primaryKey = 'id_checkout';
-	public $timestamps = false;
 
 	protected $casts = [
-		'id_checkin' => 'int',
-		'waktu_checkout' => 'datetime'
+		'checkin_idcheckin' => 'int',
+		'waktu_checkout' => 'datetime',
+		'denda' => 'int'
 	];
 
 	protected $fillable = [
-		'id_checkin',
-		'waktu_checkout'
+		'checkin_idcheckin',
+		'waktu_checkout',
+		'denda',
+		'keterangan'
 	];
 
 	public function check_in()
 	{
-		return $this->belongsTo(CheckIn::class, 'id_checkin');
+		return $this->belongsTo(CheckIn::class, 'checkin_idcheckin');
 	}
 }
