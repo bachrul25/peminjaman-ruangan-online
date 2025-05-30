@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
 import '../../assets/css/global.css';
 import logo from '../../assets/images/logo.png';
@@ -7,6 +7,15 @@ import { FiMenu, FiX } from 'react-icons/fi';
 function NavBar() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Cek apakah ada data user di localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -48,8 +57,13 @@ function NavBar() {
             ))}
           </ul>
           <div className="h-6 border-l border-teal-600" />
-          <Link to="/profile" className="flex items-center gap-2">
-            <span className="hind-madurai-semibold">Bob Smith</span>
+          <Link
+            to={user ? '/profile' : '/login'}
+            className="flex items-center gap-2"
+          >
+            <span className="hind-madurai-semibold">
+              {user ? user.name : 'Login'}
+            </span>
           </Link>
         </div>
       </div>
@@ -73,11 +87,13 @@ function NavBar() {
           ))}
           <hr className="border-gray-200" />
           <Link
-            to="/profile"
+            to={user ? '/profile' : '/login'}
             className="flex items-center gap-2"
             onClick={() => setIsOpen(false)}
           >
-            <span className="hind-madurai-semibold">Bob Smith</span>
+            <span className="hind-madurai-semibold">
+              {user ? user.name : 'Login'}
+            </span>
           </Link>
         </div>
       )}
