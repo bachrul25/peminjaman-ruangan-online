@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\CheckOutController;
+use App\Http\Controllers\PinjamController;
 use App\Http\Controllers\RuanganController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -29,4 +30,7 @@ Route::prefix('checkout')->group(function () {
 });
 
 // Ruangan Routes
-Route::apiResource('/ruangans', RuanganController::class);
+Route::apiResource('/ruangan', RuanganController::class);
+
+// Pinjam Routes
+Route::apiResource('/pinjams', PinjamController::class);
