@@ -35,12 +35,9 @@ const Profile = () => {
             <table className="w-full text-sm sm:text-base md:text-lg hind-madurai-regular">
               <tbody>
                 {[
-                  ['Username', userData.username],
-                  ['Full Name', userData.fullName],
-                  ['Birth Date', userData.birthDate],
+                  ['Name', userData.fullName],
                   ['Phone Number', userData.phoneNumber],
                   ['Email', userData.email],
-                  ['Gender', userData.gender],
                 ].map(([label, value], i) => (
                   <tr key={i} className="h-10 sm:h-12">
                     <td className="font-medium w-32 sm:w-40 primary">{label}</td>
