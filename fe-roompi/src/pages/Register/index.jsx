@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
     email: '',
     password: '',
     password_confirmation: ''
@@ -74,6 +76,40 @@ const Register = () => {
           )}
 
           <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Name */}
+            <div>
+              <label className="block text-base sm:text-lg text-left hind-madurai-regular text-black mb-1">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="e.g. someone"
+                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-main text-base sm:text-lg grey"
+                required
+                value={formData.name}
+                onChange={handleChange}
+              />
+              {errors.name && <span className="text-red-500 text-sm">{errors.name[0]}</span>}
+            </div>
+
+            {/* No telp */}
+            <div>
+              <label className="block text-base sm:text-lg text-left hind-madurai-regular text-black mb-1">
+                Phone Number
+              </label>
+              <input
+                type="text"
+                name="phone"
+                placeholder="e.g. 085125250375"
+                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-main text-base sm:text-lg grey"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+              />
+              {errors.phone && <span className="text-red-500 text-sm">{errors.phone[0]}</span>}
+            </div>
+
             {/* Email */}
             <div>
               <label className="block text-base sm:text-lg text-left hind-madurai-regular text-black mb-1">

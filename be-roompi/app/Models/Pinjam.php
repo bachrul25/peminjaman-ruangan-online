@@ -14,55 +14,56 @@ use Illuminate\Database\Eloquent\Model;
  * Class Pinjam
  * 
  * @property int $id_pinjam
- * @property int $id_user
- * @property int $id_room
- * @property int $id_sesi
+ * @property int $user_iduser
+ * @property int $ruangan_idruangan
+ * @property int $sesi_idsesi
  * @property Carbon $tanggal_pinjam
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
+ * @property Ruangan $ruangan
  * @property Sesi $sesi
  * @property User $user
- * @property Ruangan $ruangan
  * @property Collection|CheckIn[] $check_ins
  *
  * @package App\Models
  */
 class Pinjam extends Model
 {
-	protected $table = 'pinjam';
+	protected $table = 'pinjams';
 	protected $primaryKey = 'id_pinjam';
-	public $timestamps = false;
 
 	protected $casts = [
-		'id_user' => 'int',
-		'id_room' => 'int',
-		'id_sesi' => 'int',
+		'user_iduser' => 'int',
+		'ruangan_idruangan' => 'int',
+		'sesi_idsesi' => 'int',
 		'tanggal_pinjam' => 'datetime'
 	];
 
 	protected $fillable = [
-		'id_user',
-		'id_room',
-		'id_sesi',
+		'user_iduser',
+		'ruangan_idruangan',
+		'sesi_idsesi',
 		'tanggal_pinjam'
 	];
 
+	public function ruangan()
+	{
+		return $this->belongsTo(Ruangan::class, 'ruangan_idruangan');
+	}
+
 	public function sesi()
 	{
-		return $this->belongsTo(Sesi::class, 'id_sesi');
+		return $this->belongsTo(Sesi::class, 'sesi_idsesi');
 	}
 
 	public function user()
 	{
-		return $this->belongsTo(User::class, 'id_user');
-	}
-
-	public function ruangan()
-	{
-		return $this->belongsTo(Ruangan::class, 'id_room');
+		return $this->belongsTo(User::class, 'user_iduser');
 	}
 
 	public function check_ins()
 	{
-		return $this->hasMany(CheckIn::class, 'id_pinjam');
+		return $this->hasMany(CheckIn::class, 'pinjam_idpinjam');
 	}
 }

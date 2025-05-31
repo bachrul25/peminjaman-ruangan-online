@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,8 +17,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $role
  * @property string $nama
  * @property string $email
+ * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string $telepon
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
  * @property Collection|Pinjam[] $pinjams
  *
@@ -26,23 +31,30 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $table = 'users';
-    protected $primaryKey = 'id_user';
-    public $timestamps = false;
+    protected $primaryKey = 'id_user'; // pakai primary key custom
+    public $timestamps = true;
+
+    protected $casts = [
+        'email_verified_at' => 'datetime'
+    ];
 
     protected $hidden = [
-        'password'
+        'password',
+        'remember_token'
     ];
 
     protected $fillable = [
         'role',
         'nama',
         'email',
+        'email_verified_at',
         'password',
-        'telepon'
+        // 'telepon',
+        'remember_token'
     ];
 
     public function pinjams()
     {
-        return $this->hasMany(Pinjam::class, 'id_user');
+        return $this->hasMany(Pinjam::class, 'id_user'); // atau 'user_iduser' tergantung relasi di tabel Pinjam
     }
 }
