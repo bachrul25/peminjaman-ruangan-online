@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('pinjams', function (Blueprint $table) {
             $table->id('id_pinjam');
-            $table->foreignId('user_iduser')->constrained('users', 'id');
+            $table->foreignId('user_iduser')->constrained('users', 'id_user');
             $table->foreignId('ruangan_idruangan')->constrained('ruangans', 'id_ruangan');
             $table->foreignId('sesi_idsesi')->constrained('sesis', 'id_sesi');
             $table->dateTime('tanggal_pinjam');

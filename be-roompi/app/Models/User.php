@@ -8,6 +8,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class User
@@ -25,9 +27,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class User extends Model
 {
-	protected $table = 'user';
+	use HasApiTokens,  Notifiable;
+
+	protected $table = 'users';
 	protected $primaryKey = 'id_user';
 	public $timestamps = false;
+	public $incrementing = true;
+    protected $keyType = 'int';
 
 	protected $hidden = [
 		'password'
@@ -35,7 +41,7 @@ class User extends Model
 
 	protected $fillable = [
 		'role',
-		'nama',
+		'name',
 		'email',
 		'password',
 		'telepon'
