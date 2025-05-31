@@ -7,52 +7,43 @@ import logo5 from "../../assets/logos/logo-5.png";
 import logo6 from "../../assets/logos/logo-6.png";
 
 const logos = [
-    logo1,
-    logo2,
-    logo3,
-    logo4,
-    logo5,
-    logo6,
-    logo1,
-    logo2,
-    logo3,
-    logo4,
-    logo5,
-    logo6,
+  logo1, logo2, logo3, logo4, logo5, logo6,
+  logo1, logo2, logo3, logo4, logo5, logo6,
 ];
 
 const Partner = () => {
-    const scrollStyle = {
-        animation: "scroll 30s linear infinite",
-        display: "flex",
-        gap: "2.5rem", // sama seperti gap-10 di Tailwind
-        whiteSpace: "nowrap",
-    };
-
-    return (
-        <div className="bg-white py-16 overflow-hidden">
-            <h1 className="text-center hind-madurai-bold text-4xl mb-16">OUR PARTNERS</h1>
-        <div className="whitespace-nowrap animate-scroll flex items-center gap-22" style={scrollStyle}>
-            {logos.map((src, index) => (
+  return (
+    <div className="bg-white py-12 overflow-hidden">
+      <h1 className="text-center hind-madurai-bold text-2xl sm:text-3xl md:text-4xl mb-10 sm:mb-16">
+        OUR PARTNERS
+      </h1>
+      <div className="relative">
+        <div className="flex gap-10 animate-scroll whitespace-nowrap px-4 sm:px-8">
+          {logos.map((src, index) => (
             <img
-                key={index}
-                src={src}
-                alt={`logo-${index}`}
-                className="h-12 inline-block opacity-70"
+              key={index}
+              src={src}
+              alt={`logo-${index}`}
+              className="h-8 sm:h-10 md:h-12 opacity-70 inline-block"
             />
-            ))}
+          ))}
         </div>
+      </div>
 
-        <style>
-            {`
-            @keyframes scroll {
-                0% { transform: translateX(0%); }
-                100% { transform: translateX(-50%); }
-            }
-            `}
-        </style>
-        </div>
-    );
+      {/* Animasi scroll */}
+      <style>
+        {`
+          @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-scroll {
+            animation: scroll 30s linear infinite;
+          }
+        `}
+      </style>
+    </div>
+  );
 };
 
 export default Partner;

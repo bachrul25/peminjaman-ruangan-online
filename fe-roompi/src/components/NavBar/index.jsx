@@ -1,61 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import '../../assets/css/global.css';
 import logo from '../../assets/images/logo.png';
+import { FiMenu, FiX } from 'react-icons/fi';
 
 function NavBar() {
-    const location = useLocation();
+  const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
-    const navItems = [
-        { name: "Home", path: "/" },
-        { name: "Rooms", path: "/rooms" },
-        { name: "History", path: "/history" },
-    ];
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Rooms', path: '/rooms' },
+    { name: 'History', path: '/history' },
+  ];
 
-    return (
-        <nav className="navbar flex items-center sticky top-0 z-50 justify-between py-4 px-[160px] bg-white">
-            {/* Logo */}
-            <div className="flex items-center gap-1">
-                <Link to="/">
-                    <img src={logo} alt="Logo" className="w-24" />
+  return (
+    <nav className="navbar sticky top-0 z-50 bg-white px-4 sm:px-6 md:px-10 lg:px-[160px] py-4 shadow-md">
+      <div className="flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="Logo" className="w-20 sm:w-24" />
+        </Link>
+
+        {/* Hamburger for Mobile */}
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </button>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-10">
+          <ul className="flex gap-10">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className={`text-lg hind-madurai-regular ${
+                    location.pathname === item.path
+                      ? 'primary'
+                      : 'text-black hover:text-teal-600'
+                  }`}
+                >
+                  {item.name}
                 </Link>
-            </div>
+              </li>
+            ))}
+          </ul>
+          <div className="h-6 border-l border-teal-600" />
+          <Link to="/profile" className="flex items-center gap-2">
+            <span className="hind-madurai-semibold">Bob Smith</span>
+          </Link>
+        </div>
+      </div>
 
-            <div className="flex items-center">
-                <div className="flex items-center gap-13">
-                    {/* Navigation Links */}
-                    <ul className="flex space-x-13">
-                        {navItems.map((item) => (
-                        <li key={item.path}>
-                            <Link
-                            to={item.path}
-                            className={`text-lg hind-madurai-regular ${
-                                location.pathname === item.path
-                                ? "primary"
-                                : "text-black hover:primary"
-                            }`}
-                            >
-                            {item.name}
-                            </Link>
-                        </li>
-                        ))}
-                    </ul>
-
-                    {/* Vertical Divider + Profile Link */}
-                    <div className="h-6 border-l border-teal-600" />
-
-                    <Link to="/profile" className="flex items-center gap-2">
-                        <span className="hind-madurai-semibold">Bob Smith</span>
-                        <img
-                            src="https://i.pravatar.cc/32"
-                            alt="Profile"
-                            className="w-8 h-8 rounded-full object-cover"
-                        />
-                    </Link>
-                </div>
-            </div>
-        </nav>
-    );
+      {/* Mobile Menu Dropdown */}
+      {isOpen && (
+        <div className="md:hidden mt-4 flex flex-col gap-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`text-base ${
+                location.pathname === item.path
+                  ? 'primary'
+                  : 'text-black hover:text-teal-600'
+              }`}
+              onClick={() => setIsOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <hr className="border-gray-200" />
+          <Link
+            to="/profile"
+            className="flex items-center gap-2"
+            onClick={() => setIsOpen(false)}
+          >
+            <span className="hind-madurai-semibold">Bob Smith</span>
+          </Link>
+        </div>
+      )}
+    </nav>
+  );
 }
 
 export default NavBar;

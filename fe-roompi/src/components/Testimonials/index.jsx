@@ -30,27 +30,29 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
-    return (
-        <section className="bg-cover bg-center" style={{ backgroundImage: `url(${bgTesti})` }}>
-            <div className="bg-black/75 py-24 px-[160px]">
-                <div className="max-w-7xl mx-auto text-center text-white mb-32">
-                    <h2 className="text-5xl hind-madurai-bold">Testimonials</h2>
-                </div>
-                <div className="flex flex-col lg:flex-row justify-center items-stretch gap-8">
-                    {testimonials.map((testimonial, idx) => (
-                    <TestiCard key={idx} testimonial={testimonial} />
-                    ))}
-                </div>
-                {/* Optional dots for pagination */}
-                <div className="flex justify-center mt-8 gap-2">
-                    <span className="w-3 h-3 bg-white rounded-full opacity-70"></span>
-                    <span className="w-3 h-3 bg-white rounded-full opacity-40"></span>
-                    <span className="w-3 h-3 bg-white rounded-full opacity-40"></span>
-                </div>
-            </div>
-            
-        </section>
-    );
+  return (
+    <section
+      className="bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgTesti})` }}
+    >
+      <div className="bg-black/75 py-16 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40">
+        <div className="max-w-7xl mx-auto text-center text-white mb-16">
+          <h2 className="text-3xl md:text-5xl hind-madurai-bold">Testimonials</h2>
+        </div>
+        <div className="flex flex-col gap-16 xl:gap-8 lg:flex-row lg:justify-center lg:items-stretch">
+          {testimonials.map((testimonial, idx) => (
+            <TestiCard key={idx} testimonial={testimonial} />
+          ))}
+        </div>
+        {/* Optional dots for pagination */}
+        <div className="flex justify-center mt-8 gap-2">
+          <span className="w-3 h-3 bg-white rounded-full opacity-70"></span>
+          <span className="w-3 h-3 bg-white rounded-full opacity-40"></span>
+          <span className="w-3 h-3 bg-white rounded-full opacity-40"></span>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default Testimonials;
