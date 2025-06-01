@@ -4,32 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Pinjam;
 use App\Models\Ruangan;
+use App\Models\Sesi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class PinjamController extends Controller
 {
     // Show all transactions
-    public function index(){
-         $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
+    public function index()
+    {
+        $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
 
-
-         if ($pinjams->isEmpty()) {
+        if ($pinjams->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found'
             ], 404);
-         }
+        }
 
-         return response()->json([
+        return response()->json([
             'success' => true,
             'message' => 'Get all data',
             'data' => $pinjams
-         ], 200);
+        ], 200);
     }
 
-    // Transaction (add data)
-    public function store(Request $request){
+    // Check room availability
+    public function checkAvailability(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'ruangan_idruangan' => 'required|exists:ruangans,id_ruangan',
             'sesi_idsesi' => 'required|exists:sesis,id_sesi',
@@ -44,40 +46,76 @@ class PinjamController extends Controller
             ], 422);
         }
 
-/**
- * !!!Harus dibuat segera!!!
- * 
- * 1. pemesanan by user login✅
- * 2. available or no for ruangan
- * 3. if room is available show it on the page
- * 4. if not avail, tidak bisa pinjam dan tampilkan
- * 5. if member has booking, make the room session not avail
- * 6. Update data peminjaman
- */
+        $isAvailable = $this->isRoomAvailable(
+            $request->ruangan_idruangan,
+            $request->sesi_idsesi,
+            $request->tanggal_pinjam
+        );
 
-    // !!!Cek login, Pemesanan ruangan hanya bisa oleh member yang sedang login!!!
-        // $user = auth('api')->user();
-        
-        // if (!$user){
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Unathorized!'
-        //     ], 401);
-        // }
+        return response()->json([
+            'success' => true,
+            'message' => 'Availability checked',
+            'data' => [
+                'available' => $isAvailable
+            ]
+        ], 200);
+    }
 
-    // !!!Mencari data ruangan dari request!!!
-        // $book = Book::find($request->book_id);
+    // Transaction (add data)
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ruangan_idruangan' => 'required|exists:ruangans,id_ruangan',
+            'sesi_idsesi' => 'required|exists:sesis,id_sesi',
+            'tanggal_pinjam' => 'required|date|after_or_equal:today'
+        ]);
 
-        // // Cek avail or not for ruangan
-        // if ($book->stock < $request->quantity) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Insufficient stock of goods'
-        //     ], 400);
-        // }
-        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'data' => $validator->errors()
+            ], 422);
+        }
+
+        // 1. Pemesanan by user login
+        $user = auth('api')->user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized!'
+            ], 401);
+        }
+
+        // 2. Check if room is available
+        $isAvailable = $this->isRoomAvailable(
+            $request->ruangan_idruangan,
+            $request->sesi_idsesi,
+            $request->tanggal_pinjam
+        );
+
+        if (!$isAvailable) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ruangan tidak tersedia pada tanggal dan sesi yang diminta'
+            ], 400);
+        }
+
+        // 5. Check if user already has booking for this session
+        $existingBooking = Pinjam::where('user_iduser', $user->id_user)
+            ->where('sesi_idsesi', $request->sesi_idsesi)
+            ->where('tanggal_pinjam', $request->tanggal_pinjam)
+            ->first();
+
+        if ($existingBooking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah memiliki pemesanan untuk sesi ini pada tanggal yang sama'
+            ], 400);
+        }
+
         $pinjams = Pinjam::create([
-            'user_iduser' => auth('api')->id(),
+            'user_iduser' => $user->id_user,
             'ruangan_idruangan' => $request->ruangan_idruangan,
             'sesi_idsesi' => $request->sesi_idsesi,
             'tanggal_pinjam' => $request->tanggal_pinjam,
@@ -91,26 +129,79 @@ class PinjamController extends Controller
     }
 
     // Show detail peminjaman
-    public function show(string $id){
-        $pinjams = Pinjam::find($id);
+    public function show(string $id)
+    {
+        $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->find($id);
+
         if (!$pinjams) {
             return response()->json([
                 'success' => false,
                 'message' => 'Detail not found',
-            ]);
+            ], 404);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Get data peminjaman',
             'data' => $pinjams
-        ]);
+        ], 200);
     }
 
     // Update data peminjaman
+    public function update(Request $request, string $id)
+    {
+        $pinjam = Pinjam::find($id);
+
+        if (!$pinjam) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data peminjaman tidak ditemukan'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'ruangan_idruangan' => 'exists:ruangans,id_ruangan',
+            'sesi_idsesi' => 'exists:sesis,id_sesi',
+            'tanggal_pinjam' => 'date|after_or_equal:today'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'data' => $validator->errors()
+            ], 422);
+        }
+
+        // Check if new data is different
+        if ($request->has('ruangan_idruangan') || $request->has('sesi_idsesi') || $request->has('tanggal_pinjam')) {
+            $newRuangan = $request->ruangan_idruangan ?? $pinjam->ruangan_idruangan;
+            $newSesi = $request->sesi_idsesi ?? $pinjam->sesi_idsesi;
+            $newTanggal = $request->tanggal_pinjam ?? $pinjam->tanggal_pinjam;
+
+            // Check availability for new data
+            $isAvailable = $this->isRoomAvailable($newRuangan, $newSesi, $newTanggal, $pinjam->id_pinjam);
+
+            if (!$isAvailable) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Ruangan tidak tersedia untuk perubahan yang diminta'
+                ], 400);
+            }
+        }
+
+        $pinjam->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data peminjaman berhasil diperbarui',
+            'data' => $pinjam
+        ], 200);
+    }
 
     // Delete data peminjam
-    public function destroy(string $id){
+    public function destroy(string $id)
+    {
         $pinjams = Pinjam::find($id);
 
         if (!$pinjams) {
@@ -124,7 +215,20 @@ class PinjamController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Delete data successfully'
-        ]);
+        ], 200);
     }
 
+    // Helper function to check room availability
+    private function isRoomAvailable($ruanganId, $sesiId, $tanggal, $excludePinjamId = null)
+    {
+        $query = Pinjam::where('ruangan_idruangan', $ruanganId)
+            ->where('sesi_idsesi', $sesiId)
+            ->where('tanggal_pinjam', $tanggal);
+
+        if ($excludePinjamId) {
+            $query->where('id_pinjam', '!=', $excludePinjamId);
+        }
+
+        return $query->count() === 0;
+    }
 }

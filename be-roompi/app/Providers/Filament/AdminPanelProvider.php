@@ -8,7 +8,9 @@ use Filament\Widgets;
 use Filament\PanelProvider;
 use App\Filament\Pages\Dashboard;
 use Filament\Support\Colors\Color;
+use App\Filament\Pages\Auth\CustomLogin;
 use Filament\Http\Middleware\Authenticate;
+use App\Filament\Pages\Auth\CustomRegister;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -27,6 +29,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->login(CustomLogin::class)
+            ->registration(CustomRegister::class)
             ->brandName('Roompi')
             ->brandLogo(asset('img/logo.png'))
             ->sidebarCollapsibleOnDesktop()

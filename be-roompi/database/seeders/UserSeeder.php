@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'email' => 'asep@example.com',
                 'password' => Hash::make('asep01'),
                 'role' => 'admin',
-                // 'telepon' => '081234567890',
+                'telepon' => '081234567890',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
                 'email' => 'joko@example.com',
                 'password' => Hash::make('joko02'),
                 'role' => 'member',
-                // 'telepon' => '089876543210',
+                'telepon' => '089876543210',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

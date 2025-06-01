@@ -21,10 +21,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $harga
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
+
  * @property Tipe $tipe
  * @property Collection|Pinjam[] $pinjams
- *
+
  * @package App\Models
  */
 class Ruangan extends Model

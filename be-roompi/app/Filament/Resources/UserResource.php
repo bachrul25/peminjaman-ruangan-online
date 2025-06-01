@@ -44,6 +44,11 @@ class UserResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true),
 
+                TextInput::make('telepon')
+                    ->label('Nomor Telepon')
+                    ->tel() // Ini akan memvalidasi input sebagai nomor telepon
+                    ->nullable(), // Sesuai dengan migration yang nullable
+
                 Select::make('role')
                     ->label('Role')
                     ->options([
@@ -69,6 +74,9 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->sortable(),
+                TextColumn::make('telepon')
+                    ->label('Telepon')
+                    ->searchable(),
                 TextColumn::make('role')->badge()->colors([
                     'primary' => 'admin',
                     'gray' => 'user',
