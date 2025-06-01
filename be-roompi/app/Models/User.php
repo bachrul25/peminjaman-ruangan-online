@@ -8,11 +8,10 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 
 /**
  * Class User
@@ -37,29 +36,29 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
-	use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable;
 
-	protected $table = 'users';
-	protected $primaryKey = 'id_user';
-	public $timestamps = false;
-	public $incrementing = true;
-	protected $keyType = 'int';
+    protected $table = 'users';
+    protected $primaryKey = 'id_user';
+    public $timestamps = false;
+    public $incrementing = true;
+    protected $keyType = 'int';
 
-	protected $hidden = [
-		'password',
-		'remember_token'
-	];
+    protected $hidden = [
+        'password',
+        'remember_token'
+    ];
 
-	protected $fillable = [
-		'role',
-		'name',
-		'email',
-		'password',
-		'telepon'
-	];
+    protected $fillable = [
+        'role',
+        'name',
+        'email',
+        'password',
+        'telepon'
+    ];
 
-	public function pinjams()
-	{
-		return $this->hasMany(Pinjam::class, 'id_user'); // atau 'user_iduser' tergantung relasi di tabel Pinjam
-	}
+    public function pinjams()
+    {
+        return $this->hasMany(Pinjam::class, 'id_user'); // atau 'user_iduser' tergantung relasi di tabel Pinjam
+    }
 }
