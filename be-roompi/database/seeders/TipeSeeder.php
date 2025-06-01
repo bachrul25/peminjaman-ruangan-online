@@ -14,8 +14,7 @@ class TipeSeeder extends Seeder
      */
     public function run(): void
     {
-
-        $data = [
+        DB::table('tipes')->insert([
             [
                 'nama' => 'Rapat',
                 'deskripsi' => 'Ruang untuk rapat kecil 5-10 orang',
@@ -28,9 +27,6 @@ class TipeSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ];
-
-
-        Tipe::insert($data);
+        ]);
     }
 }

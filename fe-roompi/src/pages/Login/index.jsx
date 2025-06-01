@@ -30,7 +30,7 @@ const Login = () => {
         // Simpan token di localStorage
         localStorage.setItem('token', response.data.token);
         // Redirect ke dashboard atau halaman setelah login
-        navigate('/dashboard');
+        navigate('/profile');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
