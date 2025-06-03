@@ -37,7 +37,7 @@ class RuanganResource extends Resource
                     ->schema([
                         Select::make('tipe_idtipe')
                             ->label('Tipe Ruangan')
-                            ->relationship('tipe', 'nama_tipe')
+                            ->relationship('tipe', 'nama')
                             ->required()
                             ->searchable()
                             ->preload()
@@ -126,7 +126,7 @@ class RuanganResource extends Resource
             ->filters([
                 SelectFilter::make('tipe_idtipe')
                     ->label('Filter by Tipe')
-                    ->relationship('tipe', 'nama_tipe')
+                    ->relationship('tipe', 'nama')
                     ->searchable()
                     ->preload(),
             ])

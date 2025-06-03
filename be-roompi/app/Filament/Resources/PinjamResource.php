@@ -110,7 +110,7 @@ class PinjamResource extends Resource
                     ->preload(),
 
                 Tables\Filters\SelectFilter::make('sesi')
-                    ->relationship('sesi', 'nama_sesi')
+                    ->relationship('sesi', 'nama')
                     ->searchable()
                     ->preload(),
             ])

@@ -57,10 +57,6 @@ class UserResource extends Resource
                     ])
                     ->required(),
 
-                Toggle::make('is_active')
-                    ->label('Aktif')
-                    ->default(true),
-
                 DateTimePicker::make('email_verified_at')
                     ->label('Email Terverifikasi')
                     ->seconds(false),
@@ -81,9 +77,6 @@ class UserResource extends Resource
                     'primary' => 'admin',
                     'gray' => 'user',
                 ]),
-                IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean(),
                 TextColumn::make('email_verified_at')
                     ->label('Terverifikasi')
                     ->dateTime(),

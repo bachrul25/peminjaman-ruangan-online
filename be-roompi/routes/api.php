@@ -38,6 +38,15 @@ Route::prefix('checkout')->group(function () {
 
 // Ruangan Routes
 Route::apiResource('/ruangan', RuanganController::class);
+Route::post('ruangans/available', [RuanganController::class, 'availableRooms']);
 
 // Pinjam Routes
-Route::apiResource('/pinjams', PinjamController::class);
+Route::middleware('auth:api')->group(function () {
+    Route::get('/pinjam', [PinjamController::class, 'index']);
+    Route::post('/pinjam', [PinjamController::class, 'store']);
+    Route::post('/pinjam/check-availability', [PinjamController::class, 'checkAvailability']);
+    Route::get('/pinjam/{id}', [PinjamController::class, 'show']);
+    Route::put('/pinjam/{id}', [PinjamController::class, 'update']);
+    Route::delete('/pinjam/{id}', [PinjamController::class, 'destroy']);
+});
+
