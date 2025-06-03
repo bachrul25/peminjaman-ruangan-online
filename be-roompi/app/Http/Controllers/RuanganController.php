@@ -26,6 +26,12 @@ class RuanganController extends Controller
         if ($request->has('max_price')) {
             $query->where('harga', '<=', $request->max_price);
         }
+        // Filter berdasarkan nama tipe (menggantikan kategori)
+        if ($request->has('nama_tipe')) {
+            $query->whereHas('tipe', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->nama_tipe . '%');
+            });
+        }
 
         // Paginate results (default 10 per page)
         $ruangans = $query->paginate($request->per_page ?? 10);
@@ -195,7 +201,8 @@ class RuanganController extends Controller
             'sesi_id' => 'required|exists:sesis,id_sesi',
             'tipe_id' => 'nullable|exists:tipes,id_tipe',
             'min_capacity' => 'nullable|integer|min:1',
-            'max_price' => 'nullable|integer|min:0'
+            'max_price' => 'nullable|integer|min:0',
+            'nama_tipe' => 'nullable|string' // Validasi untuk nama tipe
         ]);
 
         if ($validator->fails()) {

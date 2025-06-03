@@ -26,8 +26,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 // Check-in Routes
 Route::prefix('checkin')->group(function () {
-    Route::post('/', [CheckInController::class, 'store']);
-    Route::get('/{id}', [CheckInController::class, 'show']);
+    Route::post('/checkin', [CheckInController::class, 'store']);
+    Route::get('/checkin/{id}', [CheckInController::class, 'show']);
+
 });
 
 // Checkout Routes
@@ -37,11 +38,19 @@ Route::prefix('checkout')->group(function () {
 });
 
 // Ruangan Routes
-Route::apiResource('/ruangan', RuanganController::class);
-Route::post('ruangans/available', [RuanganController::class, 'availableRooms']);
+Route::prefix('ruangans')->group(function () {
+    Route::get('/', [RuanganController::class, 'index']); // List all + filter
+    Route::post('/', [RuanganController::class, 'store']); // Create
+    Route::get('/{id}', [RuanganController::class, 'show']); // Show detail
+    Route::put('/{id}', [RuanganController::class, 'update']); // Update
+    Route::delete('/{id}', [RuanganController::class, 'destroy']); // Delete
+    Route::get('/available', [RuanganController::class, 'availableRooms']); // Get available rooms
+});
+// Route::apiResource('/ruangan', RuanganController::class);
+// Route::post('ruangans/available', [RuanganController::class, 'availableRooms']);
 
 // Pinjam Routes
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pinjam', [PinjamController::class, 'index']);
     Route::post('/pinjam', [PinjamController::class, 'store']);
     Route::post('/pinjam/check-availability', [PinjamController::class, 'checkAvailability']);
@@ -49,4 +58,3 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/pinjam/{id}', [PinjamController::class, 'update']);
     Route::delete('/pinjam/{id}', [PinjamController::class, 'destroy']);
 });
-

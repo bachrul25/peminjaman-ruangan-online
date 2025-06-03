@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'sanctum', // atau 'sanctum' jika pakai Sanctum
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
 
     /*
