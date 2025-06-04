@@ -15,6 +15,7 @@ class AuthController extends Controller
         try {
             // Validate input
             $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
                 'email' => [
                     'required',
                     'string',
@@ -30,6 +31,7 @@ class AuthController extends Controller
                     'confirmed',
                     'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
                 ],
+                'telepon' => 'nullable|string|max:20',
             ], [
                 'email.regex' => 'Please enter a valid email address',
                 'password.regex' => 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character',
@@ -45,10 +47,11 @@ class AuthController extends Controller
 
             // Create user
             $user = User::create([
-                'name' => explode('@', $request->email)[0],
+                'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => 'member',
+                'telepon' => $request->telepon,
+                'role' => 'user', // Default role sesuai dengan pilihan di Filament
             ]);
 
             // Generate token
@@ -62,6 +65,8 @@ class AuthController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
+                        'telepon' => $user->telepon,
+                        'role' => $user->role,
                         'created_at' => $user->created_at,
                     ],
                     'token' => $token,
@@ -90,17 +95,30 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid email or password'
             ], 401);
         }
 
+        $token = $user->createToken('auth_token', ['*'], now()->addDays(7))->plainTextToken;
+
         return response()->json([
             'success' => true,
-            'token' => $user->createToken('auth_token')->plainTextToken,
-            'user' => $user
+            'message' => 'Login successful',
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'telepon' => $user->telepon,
+                    'role' => $user->role,
+                ],
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'expires_in' => 604800 // 7 days in seconds
+            ]
         ]);
     }
 

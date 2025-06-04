@@ -16,13 +16,18 @@ class CheckInController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         // Cek apakah peminjaman sudah checkin sebelumnya
         $existingCheckIn = CheckIn::where('pinjam_idpinjam', $request->pinjam_idpinjam)->first();
         if ($existingCheckIn) {
-            return response()->json(['message' => 'Peminjaman ini sudah melakukan check-in sebelumnya'], 400);
+            return response()->json([
+                'message' => 'Peminjaman ini sudah melakukan check-in sebelumnya',
+            ], 409); // Conflict
         }
 
         $checkIn = CheckIn::create([
@@ -36,18 +41,25 @@ class CheckInController extends Controller
         ], 201);
     }
 
+    // Menampilkan detail check-in beserta relasi
+
     public function show($id)
     {
         $checkIn = CheckIn::with([
-            'pinjams.users',
-            'pinjams.ruangans',
-            'pinjams.sesis'
+            'pinjam.user',
+            'pinjam.ruangan',
+            'pinjam.sesi'
         ])->find($id);
 
         if (!$checkIn) {
-            return response()->json(['message' => 'Data check-in tidak ditemukan'], 404);
+            return response()->json([
+                'message' => 'Data check-in tidak ditemukan',
+            ], 404);
         }
 
-        return response()->json($checkIn);
+        return response()->json([
+            'message' => 'Detail check-in ditemukan',
+            'data' => $checkIn,
+        ]);
     }
 }

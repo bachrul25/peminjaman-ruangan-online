@@ -12,6 +12,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
+    return response()->json([
+        'success' => true,
+        'user' => $request->user()
+    ]);
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -31,6 +38,15 @@ Route::prefix('checkout')->group(function () {
 
 // Ruangan Routes
 Route::apiResource('/ruangan', RuanganController::class);
+Route::post('ruangans/available', [RuanganController::class, 'availableRooms']);
 
 // Pinjam Routes
-Route::apiResource('/pinjam', PinjamController::class);
+Route::middleware('auth:api')->group(function () {
+    Route::get('/pinjam', [PinjamController::class, 'index']);
+    Route::post('/pinjam', [PinjamController::class, 'store']);
+    Route::post('/pinjam/check-availability', [PinjamController::class, 'checkAvailability']);
+    Route::get('/pinjam/{id}', [PinjamController::class, 'show']);
+    Route::put('/pinjam/{id}', [PinjamController::class, 'update']);
+    Route::delete('/pinjam/{id}', [PinjamController::class, 'destroy']);
+});
+

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\CheckIn;
-use App\Models\CheckOut;
+use App\Models\Checkout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,33 +21,37 @@ class CheckOutController extends Controller
         }
 
         // Cek apakah sudah checkout sebelumnya
-        $existingCheckout = CheckOut::where('checkin_idcheckin', $request->checkin_idcheckin)->first();
+        $existingCheckout = Checkout::where('checkin_idcheckin', $request->checkin_idcheckin)->first();
         if ($existingCheckout) {
             return response()->json(['message' => 'Check-in ini sudah melakukan checkout sebelumnya'], 400);
         }
 
-        $checkIn = CheckIn::with('pinjams')->find($request->checkin_idcheckin);
-        $pinjam = $checkIn->pinjams;
+        // Ambil data CheckIn dan relasi pinjam
+        $checkIn = CheckIn::with('pinjam')->find($request->checkin_idcheckin);
+        if (!$checkIn || !$checkIn->pinjam) {
+            return response()->json(['message' => 'Data peminjaman tidak ditemukan'], 404);
+        }
+
+        $pinjam = $checkIn->pinjam;
 
         // Hitung denda jika melebihi waktu sesi
         $denda = 0;
         $keterangan = null;
 
-        $sesi = $pinjam->sesis;
+        $sesi = $pinjam->sesi;
         $waktuSelesai = Carbon::parse($pinjam->tanggal_pinjam)->format('Y-m-d') . ' ' . $sesi->end_time;
         $waktuSelesai = Carbon::parse($waktuSelesai);
         $waktuCheckout = Carbon::now();
 
         if ($waktuCheckout->gt($waktuSelesai)) {
-            // Denda 10% dari harga ruangan per jam
             $jamTerlambat = $waktuCheckout->diffInHours($waktuSelesai);
-            $denda = $pinjam->ruangans->harga * 0.1 * $jamTerlambat;
+            $denda = $pinjam->ruangan->harga * 0.1 * $jamTerlambat;
             $keterangan = 'Terlambat ' . $jamTerlambat . ' jam';
         }
 
-        $checkout = CheckOut::create([
+        $checkout = Checkout::create([
             'checkin_idcheckin' => $request->checkin_idcheckin,
-            'tanggal_checkout' => $waktuCheckout,
+            'waktu_checkout' => $waktuCheckout,
             'denda' => $denda,
             'keterangan' => $keterangan,
         ]);
@@ -62,10 +66,10 @@ class CheckOutController extends Controller
 
     public function show($id)
     {
-        $checkout = CheckOut::with([
-            'check_ins.pinjams.users',
-            'check_ins.pinjams.ruangans',
-            'check_ins.pinjams.sesis'
+        $checkout = Checkout::with([
+            'check_in.pinjam.user',
+            'check_in.pinjam.ruangan',
+            'check_in.pinjam.sesi'
         ])->find($id);
 
         if (!$checkout) {
