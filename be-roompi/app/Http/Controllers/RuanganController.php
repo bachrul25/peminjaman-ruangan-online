@@ -55,7 +55,8 @@ class RuanganController extends Controller
             'alamat' => 'required|string',
             'kapasitas' => 'required|integer|min:1',
             'harga' => 'required|integer|min:0',
-            'foto_ruangan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'foto_ruangan' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'rating' => 'required|numeric|between:0,5|regex:/^\d(\.\d)?$/'
         ]);
 
         if ($validator->fails()) {
@@ -76,7 +77,8 @@ class RuanganController extends Controller
                 'alamat' => $request->alamat,
                 'kapasitas' => $request->kapasitas,
                 'harga' => $request->harga,
-                'foto_ruangan' => $image->hashName()
+                'foto_ruangan' => $image->hashName(),
+                'rating' => $request->rating
             ]);
 
             return response()->json([
@@ -129,7 +131,8 @@ class RuanganController extends Controller
             'alamat' => 'required|string',
             'kapasitas' => 'required|integer',
             'harga' => 'required|integer',
-            'foto_ruangan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'foto_ruangan' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'rating' => 'required|numeric|between:0,5|regex:/^\d(\.\d)?$/'
         ]);
 
         if ($validator->fails()) {

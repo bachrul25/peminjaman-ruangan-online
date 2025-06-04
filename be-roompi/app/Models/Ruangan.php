@@ -44,7 +44,8 @@ class Ruangan extends Model
 		'alamat',
 		'kapasitas',
 		'harga',
-        'foto_ruangan'
+        'foto_ruangan',
+        'rating'
 	];
 
     public function tipe()
