@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('alamat', 255);
             $table->integer('kapasitas');
             $table->integer('harga');
+            $table->string('foto_ruangan');
             $table->timestamps();
         });
     }

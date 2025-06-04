@@ -33,4 +33,4 @@ Route::prefix('checkout')->group(function () {
 Route::apiResource('/ruangan', RuanganController::class);
 
 // Pinjam Routes
-Route::apiResource('/pinjams', PinjamController::class);
+Route::apiResource('/pinjam', PinjamController::class);

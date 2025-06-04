@@ -20,6 +20,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung A Lantai 2',
                 'kapasitas' => 10,
                 'harga' => 200000,
+                'foto_ruangan' => 'ruangan_summeracon.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -29,6 +30,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung Utama Lantai 1',
                 'kapasitas' => 100,
                 'harga' => 1500000,
+                'foto_ruangan' => 'aula_besar.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

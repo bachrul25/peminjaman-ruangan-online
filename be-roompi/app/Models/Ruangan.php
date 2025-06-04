@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Ruangan
- * 
+ *
  * @property int $id_ruangan
  * @property int $tipe_idtipe
  * @property string $nama_ruangan
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $harga
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Tipe $tipe
  * @property Collection|Pinjam[] $pinjams
  *
@@ -43,7 +43,8 @@ class Ruangan extends Model
 		'nama_ruangan',
 		'alamat',
 		'kapasitas',
-		'harga'
+		'harga',
+        'foto_ruangan'
 	];
 
 	public function tipe()

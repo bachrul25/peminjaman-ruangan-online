@@ -11,10 +11,9 @@ class PinjamController extends Controller
 {
     // Show all transactions
     public function index(){
-         $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
+         $pinjam = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
 
-
-         if ($pinjams->isEmpty()) {
+         if ($pinjam->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found'
@@ -24,13 +23,25 @@ class PinjamController extends Controller
          return response()->json([
             'success' => true,
             'message' => 'Get all data',
-            'data' => $pinjams
+            'data' => $pinjam
          ], 200);
     }
+
+/**
+ * !!!Harus dibuat segera!!!
+ *
+ * 1. pemesanan by user login✅
+ * 2. available or no for ruangan
+ * 3. if room is available show it on the page
+ * 4. if not avail, tidak bisa pinjam dan tampilkan
+ * 5. if member has booking, make the room session not avail
+ * 6. Update data peminjaman
+ */
 
     // Transaction (add data)
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
+            'user_iduser' => 'required|exists:users,id',
             'ruangan_idruangan' => 'required|exists:ruangans,id_ruangan',
             'sesi_idsesi' => 'required|exists:sesis,id_sesi',
             'tanggal_pinjam' => 'required|date|after_or_equal:today'
@@ -44,40 +55,30 @@ class PinjamController extends Controller
             ], 422);
         }
 
-/**
- * !!!Harus dibuat segera!!!
- * 
- * 1. pemesanan by user login✅
- * 2. available or no for ruangan
- * 3. if room is available show it on the page
- * 4. if not avail, tidak bisa pinjam dan tampilkan
- * 5. if member has booking, make the room session not avail
- * 6. Update data peminjaman
- */
 
-    // !!!Cek login, Pemesanan ruangan hanya bisa oleh member yang sedang login!!!
-        // $user = auth('api')->user();
-        
-        // if (!$user){
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Unathorized!'
-        //     ], 401);
-        // }
+        // !!!Cek login, Pemesanan ruangan hanya bisa oleh member yang sedang login!!!
+        $user = auth('api')->user();
 
-    // !!!Mencari data ruangan dari request!!!
-        // $book = Book::find($request->book_id);
+        if (!$user){
+            return response()->json([
+                'success' => false,
+                'message' => 'Unathorized!'
+            ], 401);
+        }
+
+        // // !!!Mencari data ruangan dari request!!!
+        // $ruangans = Ruangan::find($request->ruangans_id);
 
         // // Cek avail or not for ruangan
-        // if ($book->stock < $request->quantity) {
+        // if ($ruangans->stock < $request->quantity) {
         //     return response()->json([
         //         'success' => false,
         //         'message' => 'Insufficient stock of goods'
         //     ], 400);
         // }
-        
-        $pinjams = Pinjam::create([
-            'user_iduser' => auth('api')->id(),
+
+        $pinjam = Pinjam::create([
+            'user_iduser' => $request->user_iduser,
             'ruangan_idruangan' => $request->ruangan_idruangan,
             'sesi_idsesi' => $request->sesi_idsesi,
             'tanggal_pinjam' => $request->tanggal_pinjam,
@@ -86,14 +87,14 @@ class PinjamController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Peminjaman berhasil dilakukan, tunggu pesan yang akan dikirimkan oleh admin',
-            'data' => $pinjams
+            'data' => $pinjam
         ], 201);
     }
 
     // Show detail peminjaman
     public function show(string $id){
-        $pinjams = Pinjam::find($id);
-        if (!$pinjams) {
+        $pinjam = Pinjam::find($id);
+        if (!$pinjam) {
             return response()->json([
                 'success' => false,
                 'message' => 'Detail not found',
@@ -103,7 +104,7 @@ class PinjamController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Get data peminjaman',
-            'data' => $pinjams
+            'data' => $pinjam
         ]);
     }
 
@@ -111,16 +112,16 @@ class PinjamController extends Controller
 
     // Delete data peminjam
     public function destroy(string $id){
-        $pinjams = Pinjam::find($id);
+        $pinjam = Pinjam::find($id);
 
-        if (!$pinjams) {
+        if (!$pinjam) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found'
             ], 404);
         }
 
-        $pinjams->delete();
+        $pinjam->delete();
         return response()->json([
             'success' => true,
             'message' => 'Delete data successfully'
