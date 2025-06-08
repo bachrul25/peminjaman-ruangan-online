@@ -9,6 +9,7 @@ export const loginUser = async (data) => {
     const response = await API.post("/login", data);
     return response.data;
   } catch (error) {
+    console.log("Error during login:", error);
     throw error;
   }
 };
@@ -18,6 +19,7 @@ export const registerUser = async (data) => {
     const response = await API.post('/register', data);
     return response.data;
   } catch (error) {
+    console.log("Error during registration:", error);
     throw error;
   }
 };

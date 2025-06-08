@@ -9,24 +9,28 @@ import Newsletter from "../../components/Newsletter";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination";
 import { getRooms } from "../../_services/rooms";
-// import rooms from "../../Utils/dummy";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
 function RoomsPage() {
     const [rooms, setRooms] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-        try {
-            const roomsResponse = await getRooms(currentPage); // tambahkan page kalau perlu
-            setRooms(roomsResponse.data); // roomsResponse adalah hasil dari data.data
-            setCurrentPage(roomsResponse.current_page);
-            setTotalPages(roomsResponse.last_page);
-        } catch (error) {
-            console.error("Gagal mengambil data ruangan:", error);
-        }
+            setLoading(false);
+            try {
+                const roomsResponse = await getRooms(currentPage); 
+                setRooms(roomsResponse.data); // ini array data ruangan
+                setCurrentPage(roomsResponse.current_page); // current_page dari API
+                setTotalPages(roomsResponse.last_page); // total halaman dari API
+                
+                setLoading(true);
+            } catch (error) {
+                console.error("Gagal mengambil data ruangan:", error);
+            }
         };
 
         fetchData();
@@ -34,7 +38,7 @@ function RoomsPage() {
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
-        setCurrentPage(page);
+            setCurrentPage(page); // trigger fetchData untuk halaman baru
         }
     };
     
@@ -89,7 +93,7 @@ function RoomsPage() {
                             <select
                                 id="session"
                                 name="session"
-                                class="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
+                                className="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
                                 >
                                 <option value="">Choose Session</option>
                                 <option value="1">Session 1</option>
@@ -126,9 +130,18 @@ function RoomsPage() {
 
             {/* Grid Cards */}
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 sm:gap-10">
-                {rooms.map((room) => (
-                <RoomCard key={room.id_ruangan} room={room} />
-                ))}
+                {loading ? rooms.map((room) => (
+                    <RoomCard key={room.id_ruangan} room={room} />
+                )) : (
+                    <div className="col-span-full flex text-center items-center justify-center">
+                            <DotLottieReact
+                                src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                                loop
+                                autoplay
+                                className="w-64 h-64"
+                            />
+                    </div>
+                )}
             </div>
 
             {/* Pagination */}

@@ -35,7 +35,7 @@ class RuanganController extends Controller
         }
 
         // Paginate results (default 10 per page)
-        $ruangan = $query->paginate($request->per_page ?? 10);
+        $ruangan = $query->paginate($request->per_page ?? 9);
 
         if ($ruangan->isEmpty()) {
             return response()->json([

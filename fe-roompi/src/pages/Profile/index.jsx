@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FaEdit } from 'react-icons/fa';
+import { FaSignOutAlt } from 'react-icons/fa';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import { useNavigate } from 'react-router-dom';
@@ -52,8 +52,8 @@ const Profile = () => {
 
           <div className="flex justify-end mb-6">
             <button className="flex items-center gap-2 text-base md:text-lg hind-madurai-medium primary hover:underline">
-              <FaEdit />
-              Edit Profile
+              <FaSignOutAlt />
+              Sign Out
             </button>
           </div>
 
@@ -61,8 +61,7 @@ const Profile = () => {
             <table className="w-full text-sm sm:text-base md:text-lg hind-madurai-regular">
               <tbody>
                 {[
-                  ['Username', userData.username ?? '-'],
-                  ['Full Name', userData.nama ?? '-'],
+                  ['Username', userData.name ?? '-'],
                   ['Phone Number', userData.telepon ?? '-'],
                   ['Email', userData.email ?? '-'],
                   ['Role', userData.role ?? '-'],

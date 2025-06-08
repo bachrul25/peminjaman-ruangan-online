@@ -32,7 +32,6 @@ class PinjamController extends Controller
     public function checkAvailability(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_iduser' => 'required|exists:users,id',
             'ruangan_idruangan' => 'required|exists:ruangans,id_ruangan',
             'sesi_idsesi' => 'required|exists:sesis,id_sesi',
             'tanggal_pinjam' => 'required|date|after_or_equal:today'

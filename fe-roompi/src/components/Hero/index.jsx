@@ -67,7 +67,7 @@ function Hero() {
                                     <select
                                         id="session"
                                         name="session"
-                                        class="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
+                                        className="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
                                         >
                                         <option value="">Choose Session</option>
                                         <option value="1">Session 1</option>

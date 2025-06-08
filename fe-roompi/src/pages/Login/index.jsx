@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../_services/auth';
 
@@ -12,7 +11,8 @@ const Login = () => {
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
+  const [ error, setError ] = useState(null);
+  const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,17 +24,23 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await loginUser(formData);
       
-      if (response.data.success) {
+      
+      if (response.success) {
         localStorage.setItem('token', response.data.token);
-        navigate('/profile');
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        navigate('/');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,9 +106,9 @@ const Login = () => {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="w-44 sm:w-52 bg-primary text-white hind-madurai-medium py-2 rounded-xl hover:bg-[#006f80] transition duration-200 text-base sm:text-lg"
+                className="w-44 sm:w-52 bg-primary text-white hind-madurai-medium py-2 rounded-xl hover:cursor-pointer hover:bg-secondary transition duration-200 text-base sm:text-lg"
               >
-                Log in
+                {loading ? "Loging in..." : "Log In"}
               </button>
             </div>
           </form>

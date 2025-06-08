@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 import imgDummy from "../../assets/images/img-dummy.png";
 import { FaChevronLeft, FaMapMarkerAlt, FaUser } from 'react-icons/fa';
 import { Link, useParams } from 'react-router';
-import { checkAvailableRoom, showRoom } from '../../_services/rooms';
+import { showRoom } from '../../_services/rooms';
 
 function RoomDetail() {
   const { id_ruangan } = useParams(); // id diambil dari URL
@@ -31,35 +31,33 @@ function RoomDetail() {
     fetchRoom();
   }, [id_ruangan]);
 
-  const today = new Date();
-  const [sessionAvailable1, setSessionAvailable1] = useState(0);
-  const [sessionAvailable2, setSessionAvailable2] = useState(0);
 
-  const checkSesi = async () => {
-    const sesi1 = {
-      tanggal: today.toISOString().split('T')[0],
-      sesi_id: 1,
-    };
+  // const [sessionAvailable1, setSessionAvailable1] = useState(0);
+  // const [sessionAvailable2, setSessionAvailable2] = useState(0);
+  const sessionAvailable1 = 1; // Placeholder for session availability
+  const sessionAvailable2 = 1;
 
-    const sesi2 = {
-      tanggal: today.toISOString().split('T')[0],
-      sesi_id: 2,
-    };
-    
-    try {
-      const response1 = await checkAvailableRoom(sesi1);
-      const response2 = await checkAvailableRoom(sesi2);
+  // useEffect(() => {
+  //   const today = new Date();
+  //   const tanggal = today.toISOString().split('T')[0];
 
-      if (response1.success) setSessionAvailable1(1);
-      if (response2.success) setSessionAvailable2(1);
+  //   const checkSesi = async () => {
+  //     try {
+  //       const [response1, response2] = await Promise.all([
+  //         checkAvailableRoom({ tanggal, sesi_id: 1 }),
+  //         checkAvailableRoom({ tanggal, sesi_id: 2 }),
+  //       ]);
 
+        
+  //       if (response1.success) setSessionAvailable1(1);
+  //       if (response2.success) setSessionAvailable2(1);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  checkSesi();
+  //   checkSesi();
+  // }, []);
 
   return (
     <div>

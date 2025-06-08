@@ -1,13 +1,24 @@
 import { API } from "../_api";
 
 export const getRooms = async (page = 1) => {
-  const { data } = await API.get(`/ruangan?page=${page}`);
-  return data.data; // bagian "data" dalam response JSON
+    try {
+        const response = await API.get(`/ruangans?page=${page}`);
+        const resData = response.data.data;
+
+        return {
+            data: resData.data, // array data rooms
+            current_page: resData.current_page,
+            last_page: resData.last_page,
+        };
+    } catch (error) {
+        console.error("Error fetching rooms:", error);
+        throw error;
+    }
 };
 
 export const showRoom = async (id_ruangan) => {
     try {
-        const { data } = await API.get(`/ruangan/${id_ruangan}`)
+        const { data } = await API.get(`/ruangans/${id_ruangan}`)
         return data.data;
     } catch (error) {
         console.error("Error fetching room:", error);
@@ -15,12 +26,12 @@ export const showRoom = async (id_ruangan) => {
     }
 };
 
-export const checkAvailableRoom = async (sesi) => {
-    try {
-        const { data } = await API.post(`ruangans/available`, sesi);
-        return data;
-    } catch (error) {
-        console.error("Error checking available room:", error);
-        throw error; 
-    }
-}
+// export const checkAvailableRoom = async (sesi) => {
+//     try {
+//         const { data } = await API.post(`ruangans/available`, sesi);
+//         return data;
+//     } catch (error) {
+//         console.error("Error checking available room:", error);
+//         throw error; 
+//     }
+// }
