@@ -2026,7 +2026,9 @@
         },
         {
             "name": "laravel/framework",
+
             "version": "v12.17.0",
+
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
@@ -2034,8 +2036,10 @@
             },
             "dist": {
                 "type": "zip",
+
                 "url": "https://api.github.com/repos/laravel/framework/zipball/8729d084510480fdeec9b6ad198180147d4a7f06",
                 "reference": "8729d084510480fdeec9b6ad198180147d4a7f06",
+
                 "shasum": ""
             },
             "require": {
@@ -2237,7 +2241,9 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+
             "time": "2025-06-03T14:04:18+00:00"
+
         },
         {
             "name": "laravel/prompts",
@@ -10764,12 +10770,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

@@ -38,9 +38,11 @@ class CheckOutController extends Controller
         $denda = 0;
         $keterangan = null;
 
-        $sesi = $pinjam->sesi;
-        $waktuSelesai = Carbon::parse($pinjam->tanggal_pinjam)->format('Y-m-d') . ' ' . $sesi->end_time;
-        $waktuSelesai = Carbon::parse($waktuSelesai);
+        $sesi = $pinjam->sesi; // relasi sesi dari pinjam
+        $endTime = Carbon::parse($sesi->end_time)->format('H:i:s');
+        $tanggalPinjam = Carbon::parse($pinjam->tanggal_pinjam)->format('Y-m-d');
+
+        $waktuSelesai = Carbon::parse("$tanggalPinjam $endTime");
         $waktuCheckout = Carbon::now();
 
         if ($waktuCheckout->gt($waktuSelesai)) {

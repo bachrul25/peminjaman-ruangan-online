@@ -79,7 +79,7 @@ class PinjamController extends Controller
         }
 
         // 1. Pemesanan by user login
-        $user = auth('api')->user();
+        $user = auth('sanctum')->user();
         if (!$user) {
             return response()->json([
                 'success' => false,
