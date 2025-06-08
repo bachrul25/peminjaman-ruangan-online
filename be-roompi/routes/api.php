@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CheckInController;
-use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\PinjamController;
+use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\RuanganController;
+use App\Http\Controllers\CheckOutController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -26,16 +27,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 // Check-in Routes
 Route::prefix('checkin')->group(function () {
-    Route::post('/checkin', [CheckInController::class, 'store']);
-    Route::get('/checkin/{id}', [CheckInController::class, 'show']);
+    // Menghasilkan URL: POST /checkin
+    Route::post('/', [CheckInController::class, 'store']);
 
+    // Menghasilkan URL: GET /checkin/{id}
+    Route::get('/{id}', [CheckInController::class, 'show']);
 });
 
-// Checkout Routes
-Route::prefix('checkout')->group(function () {
-    Route::post('/', [CheckOutController::class, 'store']);
-    Route::get('/{id}', [CheckOutController::class, 'show']);
-});
+
+// Route untuk Check-Out (TAMBAHKAN INI)
+Route::resource('checkout', CheckOutController::class)->only(['store', 'show']);
 
 // Ruangan Routes
 Route::prefix('ruangans')->group(function () {
@@ -58,3 +59,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/pinjam/{id}', [PinjamController::class, 'update']);
     Route::delete('/pinjam/{id}', [PinjamController::class, 'destroy']);
 });
+
+
