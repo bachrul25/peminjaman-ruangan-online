@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\Validator;
 class PinjamController extends Controller
 {
     // Show all transactions
-    public function index()
-    {
-        $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
+    public function index(){
+         $pinjam = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
 
-        if ($pinjams->isEmpty()) {
+         if ($pinjam->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found'
@@ -25,7 +24,7 @@ class PinjamController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Get all data',
-            'data' => $pinjams
+            'data' => $pinjam
         ], 200);
     }
 
@@ -33,6 +32,7 @@ class PinjamController extends Controller
     public function checkAvailability(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'user_iduser' => 'required|exists:users,id',
             'ruangan_idruangan' => 'required|exists:ruangans,id_ruangan',
             'sesi_idsesi' => 'required|exists:sesis,id_sesi',
             'tanggal_pinjam' => 'required|date|after_or_equal:today'

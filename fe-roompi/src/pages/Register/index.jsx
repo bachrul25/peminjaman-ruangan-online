@@ -3,6 +3,9 @@ import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../_services/auth';
+
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +32,7 @@ const Register = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:8000/api/register', formData);
+      const response = await registerUser(formData);
       
       if (response.data.success) {
         setSuccess('Registration successful! Redirecting to login...');
