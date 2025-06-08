@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../_services/auth';
 
@@ -13,9 +12,9 @@ const Register = () => {
     phone: '',
     email: '',
     password: '',
-    password_confirmation: ''
   });
-  const [errors, setErrors] = useState({});
+  const [ error, setError ] = useState(null);
+  const [ loading, setLoading ] = useState(false);
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
@@ -28,22 +27,30 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
+    setLoading(true);
+    setError(null);
     setSuccess('');
 
     try {
+      if (formData.password !== e.target.password_confirmation.value) {
+        setError({ password: ['Passwords do not match'] });
+        setLoading(false);
+        return
+      }
       const response = await registerUser(formData);
       
-      if (response.data.success) {
+      if (response.success) {
         setSuccess('Registration successful! Redirecting to login...');
-        setTimeout(() => navigate('/login'), 2000);
+        navigate('/login');
       }
     } catch (err) {
       if (err.response?.status === 422) {
-        setErrors(err.response.data.errors);
+        setError(err.response.data.errors);
       } else {
-        setErrors({ general: [err.response?.data?.message || 'Registration failed'] });
+        setError({ general: [err.response?.data?.message || 'Registration failed'] });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,9 +73,9 @@ const Register = () => {
             Join as new Roompi’s member
           </p>
 
-          {errors.general && (
+          {error?.general && (
             <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-center">
-              {errors.general[0]}
+              {error.general[0]}
             </div>
           )}
 
@@ -93,7 +100,7 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
               />
-              {errors.name && <span className="text-red-500 text-sm">{errors.name[0]}</span>}
+              {error?.name && <span className="text-red-500 text-sm">{error.name[0]}</span>}
             </div>
 
             {/* No telp */}
@@ -110,7 +117,7 @@ const Register = () => {
                 value={formData.phone}
                 onChange={handleChange}
               />
-              {errors.phone && <span className="text-red-500 text-sm">{errors.phone[0]}</span>}
+              {error?.phone && <span className="text-red-500 text-sm">{error.phone[0]}</span>}
             </div>
 
             {/* Email */}
@@ -127,7 +134,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {errors.email && <span className="text-red-500 text-sm">{errors.email[0]}</span>}
+              {error?.email && <span className="text-red-500 text-sm">{error.email[0]}</span>}
             </div>
 
             {/* Password */}
@@ -144,7 +151,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              {errors.password && <span className="text-red-500 text-sm">{errors.password[0]}</span>}
+              {error?.password && <span className="text-red-500 text-sm">{error.password[0]}</span>}
             </div>
 
             {/* Confirm Password */}
@@ -158,7 +165,6 @@ const Register = () => {
                 placeholder="Retype your password"
                 className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-main text-base sm:text-lg grey"
                 required
-                value={formData.password_confirmation}
                 onChange={handleChange}
               />
             </div>
@@ -169,7 +175,7 @@ const Register = () => {
                 type="submit"
                 className="w-44 sm:w-52 bg-primary text-white hind-madurai-medium py-2 rounded-xl hover:bg-[#006f80] transition duration-200 text-base sm:text-lg"
               >
-                Create Account
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
             </div>
           </form>

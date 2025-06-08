@@ -1,11 +1,34 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import RoomCard from "../RoomCard";
 import { Link } from "react-router";
-import rooms from "../../Utils/dummy";
+import { getRooms } from "../../_services/rooms";
 
 const Top = () => {
 
-    
+    const [rooms, setRooms] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            const roomsResponse = await getRooms(currentPage); // tambahkan page kalau perlu
+            setRooms(roomsResponse.data); // roomsResponse adalah hasil dari data.data
+            setCurrentPage(roomsResponse.current_page);
+            setTotalPages(roomsResponse.last_page);
+        } catch (error) {
+            console.error("Gagal mengambil data ruangan:", error);
+        }
+        };
+
+        fetchData();
+    }, [currentPage]);
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+        }
+    };
 
     return (
         <section className="bg-white pt-16 pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-[160px]">
@@ -33,7 +56,7 @@ const Top = () => {
                         .sort((a, b) => b.rating - a.rating) // Urutkan berdasarkan rating tertinggi
                         .slice(0, 3)                         // Ambil 3 data teratas
                         .map((room) => (
-                            <RoomCard key={room.id} room={room} />
+                            <RoomCard key={room.id_ruangan} room={room} />
                         ))}
                 </div>
             </div>

@@ -1,39 +1,53 @@
 import { FaUser, FaStar } from "react-icons/fa";
 import '../../assets/css/global.css';
 import { Link } from "react-router";
-import { checkAvailableRoom } from "../../_services/rooms";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { checkAvailableRoom } from "../../_services/loans";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const RoomCard = ({ room }) => {
-  const today = new Date();
-  const [sessionAvailable1, setSessionAvailable1] = useState(0);
-  const [sessionAvailable2, setSessionAvailable2] = useState(0);
+  const [ login, setLogin ] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [sessionAvailable1, setSessionAvailable1] = useState(false);
+  const [sessionAvailable2, setSessionAvailable2] = useState(false);
+  
 
-  const checkSesi = async () => {
-    const sesi1 = {
-      tanggal: today.toISOString().split('T')[0],
-      sesi_id: 1,
-    };
-
-    const sesi2 = {
-      tanggal: today.toISOString().split('T')[0],
-      sesi_id: 2,
-    };
-    
-    try {
-      const response1 = await checkAvailableRoom(sesi1);
-      const response2 = await checkAvailableRoom(sesi2);
-
-      if (response1.success) setSessionAvailable1(1);
-      if (response2.success) setSessionAvailable2(1);
-
-
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setLogin(true);
     }
-  }
 
-  checkSesi();
+    const today = new Date();
+    const tanggal = today.toISOString().split('T')[0];
+    const idRoom = room?.id_ruangan;
+
+    const checkSesi = async () => {
+      try {
+        const [response1, response2] = await Promise.all([
+          checkAvailableRoom({
+              ruangan_idruangan: idRoom,
+              sesi_idsesi: 1,
+              tanggal_pinjam: tanggal,
+            }),
+          checkAvailableRoom({
+              ruangan_idruangan: idRoom,
+              sesi_idsesi: 2,
+              tanggal_pinjam: tanggal,
+          }),
+        ]);
+
+        
+        if (response1.success) setSessionAvailable1(true);
+        if (response2.success) setSessionAvailable2(true);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    checkSesi();
+  }, [room]);
 
 
   return (
@@ -78,25 +92,55 @@ const RoomCard = ({ room }) => {
 
       {/* Tombol Sesi */}
       <div className="space-y-3">
-
-        <button
-            className={`w-full py-2 rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
-              sessionAvailable1 === 1
-                ? "bg-primary text-white"
-                : "bg-secondary text-white"
-            }`}
-          >
-            Sesi 1 (09.00 - 12.00)
-          </button>
-        <button
-            className={`w-full py-2 rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
-              sessionAvailable2 === 1
-                ? "bg-primary text-white"
-                : "bg-secondary text-white"
-            }`}
-          >
-            Sesi 2 (13.00 - 16.00)
-          </button>
+        { login ? (
+          <>
+            <button
+                className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
+                  sessionAvailable1
+                    ? "bg-primary text-white"
+                    : "bg-secondary text-white"
+                }`}
+              >
+                { loading ? (
+                  <DotLottieReact
+                      src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                      loop
+                      autoplay
+                      className="w-8 h-8"
+                  />
+                ) : (
+                  `Sesi 1 (09.00 - 12.00)`
+                )}
+              </button>
+            <button
+                className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
+                  sessionAvailable2
+                    ? "bg-primary text-white"
+                    : "bg-secondary text-white"
+                }`}
+              >
+                { loading ? (
+                  <DotLottieReact
+                      src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                      loop
+                      autoplay
+                      className="w-8 h-8"
+                  />
+                ) : (
+                  `Sesi 2 (13.00 - 16.00)`
+                )}
+            </button>
+          </>
+          ) : (
+            <>
+            <button
+                className="w-full py-2 rounded hind-madurai-bold text-sm sm:text-lg bg-secondary text-white"
+                disabled
+              >
+                Login to book
+              </button>
+            </>
+          )}
       </div>
     </div>
   );
