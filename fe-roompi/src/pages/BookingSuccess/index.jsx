@@ -6,14 +6,14 @@ import NavBar from '../../components/NavBar';
 
 const BookingSuccess = () => {
   return (
-    <div className="min-h-screen flex flex-col justify-between">
+    <div className="flex flex-col justify-between min-h-screen">
       {/* Header */}
         <NavBar />
      
       {/* Main Content */}
-      <main className="flex flex-col items-center justify-center text-center px-4 py-16">
-        <h1 className="text-2xl font-semibold mb-4">Great! Your room has been successfully booked.</h1>
-        <p className="text-base text-gray-700 mb-10">
+      <main className="flex flex-col items-center justify-center px-4 py-16 text-center">
+        <h1 className="mb-4 text-2xl font-semibold">Great! Your room has been successfully booked.</h1>
+        <p className="mb-10 text-base text-gray-700">
           Please check your Whatsapp for proof of order confirmation<br />
           and payment for your order.
         </p>
