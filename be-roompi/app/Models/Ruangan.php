@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $harga
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
-
+ *
  * @property Tipe $tipe
  * @property Collection|Pinjam[] $pinjams
 
@@ -38,13 +38,15 @@ class Ruangan extends Model
         'harga' => 'int'
     ];
 
-    protected $fillable = [
-        'tipe_idtipe',
-        'nama_ruangan',
-        'alamat',
-        'kapasitas',
-        'harga'
-    ];
+	protected $fillable = [
+		'tipe_idtipe',
+		'nama_ruangan',
+		'alamat',
+		'kapasitas',
+		'harga',
+        'foto_ruangan',
+        'rating'
+	];
 
     public function tipe()
     {

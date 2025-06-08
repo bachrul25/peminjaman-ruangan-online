@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pinjam;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class RuanganController extends Controller
@@ -34,9 +35,9 @@ class RuanganController extends Controller
         }
 
         // Paginate results (default 10 per page)
-        $ruangans = $query->paginate($request->per_page ?? 10);
+        $ruangan = $query->paginate($request->per_page ?? 10);
 
-        if ($ruangans->isEmpty()) {
+        if ($ruangan->isEmpty()) {
             return response()->json([
                 "success" => false,
                 "message" => "No rooms found with the given criteria",
@@ -46,8 +47,8 @@ class RuanganController extends Controller
 
         return response()->json([
             "success" => true,
-            "message" => "Rooms retrieved successfully",
-            "data" => $ruangans
+            "message" => "Get all resource",
+            "data" => $ruangan
         ], 200);
     }
 
@@ -56,10 +57,12 @@ class RuanganController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'tipe_idtipe' => 'required|exists:tipes,id_tipe',
-            'nama_ruangan' => 'required|string|max:50|unique:ruangans,nama_ruangan',
+            'nama_ruangan' => 'required|string|max:255',
             'alamat' => 'required|string',
             'kapasitas' => 'required|integer|min:1',
-            'harga' => 'required|integer|min:0'
+            'harga' => 'required|integer|min:0',
+            'foto_ruangan' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'rating' => 'required|numeric|between:0,5|regex:/^\d(\.\d)?$/'
         ]);
 
         if ($validator->fails()) {
@@ -71,12 +74,17 @@ class RuanganController extends Controller
         }
 
         try {
+            $image = $request->file('foto_ruangan');
+            $image->store('ruangan', 'public');
+
             $ruangan = Ruangan::create([
                 'tipe_idtipe' => $request->tipe_idtipe,
                 'nama_ruangan' => $request->nama_ruangan,
                 'alamat' => $request->alamat,
                 'kapasitas' => $request->kapasitas,
-                'harga' => $request->harga
+                'harga' => $request->harga,
+                'foto_ruangan' => $image->hashName(),
+                'rating' => $request->rating
             ]);
 
             return response()->json([
@@ -112,7 +120,6 @@ class RuanganController extends Controller
         ], 200);
     }
 
-    // Update room data
     public function update(Request $request, string $id)
     {
         $ruangan = Ruangan::find($id);
@@ -125,11 +132,13 @@ class RuanganController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'tipe_idtipe' => 'exists:tipes,id_tipe',
-            'nama_ruangan' => 'string|max:50|unique:ruangans,nama_ruangan,' . $id . ',id_ruangan',
-            'alamat' => 'string',
-            'kapasitas' => 'integer|min:1',
-            'harga' => 'integer|min:0'
+            'tipe_idtipe' => 'required|exists:tipes,id_tipe',
+            'nama_ruangan' => 'required|string|max:50',
+            'alamat' => 'required|string',
+            'kapasitas' => 'required|integer',
+            'harga' => 'required|integer',
+            'foto_ruangan' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'rating' => 'required|numeric|between:0,5|regex:/^\d(\.\d)?$/'
         ]);
 
         if ($validator->fails()) {
@@ -141,11 +150,25 @@ class RuanganController extends Controller
         }
 
         try {
-            $ruangan->update($request->all());
+            $data = $request->all();
+
+            // Handle image
+            if ($request->hasFile('foto_ruangan')) {
+                $image = $request->file('foto_ruangan');
+                $image->store('ruangan', 'public');
+
+                if ($ruangan->foto_ruangan) {
+                    Storage::disk('public')->delete('ruangan/' . $ruangan->foto_ruangan);
+                }
+
+                $data['foto_ruangan'] = $image->hashName();
+            }
+
+            $ruangan->update($data);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Room updated successfully',
+                'message' => 'Data has been updated!',
                 'data' => $ruangan
             ], 200);
         } catch (\Exception $e) {
@@ -157,7 +180,6 @@ class RuanganController extends Controller
         }
     }
 
-    // Delete room
     public function destroy(string $id)
     {
         $ruangan = Ruangan::find($id);
@@ -171,11 +193,16 @@ class RuanganController extends Controller
 
         try {
             // Check if room has any bookings before deleting
-            if ($ruangan->pinjams()->exists()) {
+            if (method_exists($ruangan, 'pinjams') && $ruangan->pinjams()->exists()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Cannot delete room because it has existing bookings'
                 ], 400);
+            }
+
+            if ($ruangan->foto_ruangan) {
+                // Delete from storage
+                Storage::disk('public')->delete('ruangan/' . $ruangan->foto_ruangan);
             }
 
             $ruangan->delete();

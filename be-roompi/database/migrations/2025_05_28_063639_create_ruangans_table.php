@@ -17,6 +17,8 @@ return new class extends Migration {
             $table->string('alamat', 255);
             $table->integer('kapasitas');
             $table->integer('harga');
+            $table->string('foto_ruangan');
+            $table->float('rating', 2, 1)->default(0.0);
             $table->timestamps();
         });
     }
