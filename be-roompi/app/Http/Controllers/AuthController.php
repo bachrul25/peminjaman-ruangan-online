@@ -51,7 +51,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'telepon' => $request->telepon,
-                'role' => 'user', // Default role sesuai dengan pilihan di Filament
+                'role' => 'member', // Default role sesuai dengan pilihan di Filament
             ]);
 
             // Generate token

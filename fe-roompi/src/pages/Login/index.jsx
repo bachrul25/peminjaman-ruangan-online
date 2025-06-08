@@ -3,6 +3,9 @@ import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../_services/auth';
+
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -24,12 +27,10 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8000/api/login', formData);
+      const response = await loginUser(formData);
       
       if (response.data.success) {
-        // Simpan token di localStorage
         localStorage.setItem('token', response.data.token);
-        // Redirect ke dashboard atau halaman setelah login
         navigate('/profile');
       }
     } catch (err) {
