@@ -1,11 +1,20 @@
 import { FaUser, FaStar } from "react-icons/fa";
 import '../../assets/css/global.css';
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const RoomCard = ({ room, availability }) => {
+  const navigate = useNavigate();
   const [ login, setLogin ] = useState(false);
+
+  const handleSessionClick = (session) => {
+    navigate(`/detail-room/${room.id_ruangan}?session=${session}`);
+  };
+
+  const handleSeeDetail = () => {
+    navigate(`/detail-room/${room.id_ruangan}`);
+  };
   
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -44,12 +53,12 @@ const RoomCard = ({ room, availability }) => {
       <p className="mb-1 text-sm text-gray-600 hind-madurai-regular">{room.tipe?.nama}</p>
 
       {/* Link Detail */}
-      <Link
-        to={`/detail-room/${room.id_ruangan}`}
-        className="text-sm text-blue-600 sm:text-base hind-madurai-regular hover:underline"
+      <span
+        onClick={handleSeeDetail}
+        className="text-sm text-blue-600 cursor-pointer sm:text-base hind-madurai-regular hover:underline"
       >
         See detail &gt;
-      </Link>
+      </span>
 
       {/* Harga */}
       <p className="my-4 text-lg text-black hind-madurai-bold sm:text-xl">
@@ -61,11 +70,13 @@ const RoomCard = ({ room, availability }) => {
         { login ? (
           <>
             <button
+                onClick={() => availability?.session1 && handleSessionClick(1)}
                 className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
                   availability?.session1
                     ? "bg-primary text-white"
                     : "bg-secondary text-white"
                 }`}
+                disabled={!availability?.session1}
               >
                 { loading ? (
                   <DotLottieReact
@@ -79,11 +90,13 @@ const RoomCard = ({ room, availability }) => {
                 )}
               </button>
             <button
+                onClick={() => availability?.session2 && handleSessionClick(2)}
                 className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
                   availability?.session2
                     ? "bg-primary text-white"
                     : "bg-secondary text-white"
                 }`}
+                disabled={!availability?.session2}
               >
                 { loading ? (
                   <DotLottieReact

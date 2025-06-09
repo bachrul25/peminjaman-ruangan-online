@@ -35,3 +35,17 @@ export const checkMultipleAvailability = async (tanggal_pinjam, ruangan_ids) => 
         throw error;
     }
 };
+
+export const createLoan = async (data) => {
+    try {
+        const response = await API.post('/pinjam', data, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating loan:', error);
+        throw error;
+    }
+}
