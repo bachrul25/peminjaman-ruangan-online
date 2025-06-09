@@ -49,3 +49,17 @@ export const createLoan = async (data) => {
         throw error;
     }
 }
+
+export const getLoans = async () => {
+    try {
+        const response = await API.get(`/pinjam`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        return response.data.data;
+    } catch (error) {
+        console.error('Error fetching loans:', error);
+        throw error;
+    }
+}

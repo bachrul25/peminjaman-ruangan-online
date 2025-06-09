@@ -23,3 +23,19 @@ export const registerUser = async (data) => {
     throw error;
   }
 };
+
+export const logout = ({token}) => {
+  try {
+    const { data } = API.post('/logout', { token }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+
+    localStorage.removeItem("token");
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
