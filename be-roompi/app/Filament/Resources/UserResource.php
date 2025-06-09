@@ -77,9 +77,15 @@ class UserResource extends Resource
                     'primary' => 'admin',
                     'gray' => 'user',
                 ]),
-                TextColumn::make('email_verified_at')
+                // ...
+                IconColumn::make('email_verified_at')
                     ->label('Terverifikasi')
-                    ->dateTime(),
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-badge') // Ikon jika sudah terverifikasi
+                    ->falseIcon('heroicon-o-x-circle')   // Ikon jika belum terverifikasi
+                    ->trueColor('success')
+                    ->falseColor('danger'),
+                // ...
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime()->sortable(),

@@ -12,33 +12,89 @@ class AktivitasPeminjamanTerkini extends BaseWidget
     protected static ?int $sort = 4;
     protected int|string|array $columnSpan = 'full';
 
+    // app/Filament/Widgets/AktivitasPeminjamanTerkini.php
+
     public function table(Table $table): Table
     {
         return $table
             ->query(
-                Pinjam::query()->latest()->limit(5)
+                // Mengambil 5 data Pinjam terbaru
+                Pinjam::query()->latest('tanggal_pinjam')->limit(5)
             )
             ->heading('Aktivitas Peminjaman Terkini')
             ->columns([
-                Tables\Columns\TextColumn::make('ruangan.nama_ruangan') //
+                Tables\Columns\TextColumn::make('ruangan.nama_ruangan')
                     ->label('Ruangan'),
-                Tables\Columns\TextColumn::make('user.name') //
+
+                Tables\Columns\TextColumn::make('user.name')
                     ->label('Peminjam'),
-                Tables\Columns\TextColumn::make('tanggal_pinjam') //
+
+                Tables\Columns\TextColumn::make('sesi.nama')
+                    ->label('Sesi')
+                    ->badge(),
+
+                Tables\Columns\TextColumn::make('tanggal_pinjam')
                     ->dateTime('d M Y, H:i')
                     ->label('Tanggal Pinjam'),
-                Tables\Columns\IconColumn::make('status_checkin_custom') // Kita gunakan nama unik
+
+                // TETAP SAMA: Memanggil relasi 'check_ins' dari model Pinjam
+                Tables\Columns\IconColumn::make('status_checkin_custom')
                     ->label('Status Check-in')
                     ->boolean()
-                    ->state(function ($record): bool {
-                        // Memanggil fungsi 'check_ins()' YANG SUDAH ADA di model Anda
-                        // dan memeriksa apakah ada data yang berelasi
-                        return $record->check_ins()->exists();
-                    })
+                    ->state(fn($record): bool => $record->check_ins()->exists())
                     ->trueIcon('heroicon-o-check-circle')
                     ->trueColor('success')
                     ->falseIcon('heroicon-o-x-circle')
                     ->falseColor('danger'),
+
+                // DISESUAIKAN: Memanggil relasi 'checkouts' dari model CheckIn
+                Tables\Columns\IconColumn::make('status_checkout_custom')
+                    ->label('Status Check-Out')
+                    ->boolean()
+                    ->state(function ($record): bool {
+                        $firstCheckIn = $record->check_ins->first();
+                        // Memeriksa apakah check-in ada, lalu memanggil relasi 'checkouts()'
+                        return $firstCheckIn ? $firstCheckIn->checkouts()->exists() : false;
+                    })
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->trueColor('primary')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->falseColor('warning'),
+
+                // DISESUAIKAN: Mengambil denda dari relasi 'checkouts'
+                Tables\Columns\TextColumn::make('denda_custom')
+                    ->label('Denda')
+                    ->money('IDR')
+                    // Mengambil denda dari data checkout pertama yang ditemukan
+                    ->state(fn($record) => $record->check_ins->first()?->checkouts->first()?->denda)
+                    ->badge()
+                    ->color('danger'),
+            ])
+            // ... (bagian ->columns([...]) tetap sama) ...
+
+            // GANTI appendActions MENJADI actions
+            ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make()
+                        ->url(fn($record) => \App\Filament\Resources\PinjamResource::getUrl('view', ['record' => $record])),
+
+                    Tables\Actions\Action::make('Check In')
+                        ->icon('heroicon-s-arrow-right-on-rectangle')
+                        ->url(fn($record) => \App\Filament\Resources\CheckInResource::getUrl('create', ['pinjam_id' => $record->id_pinjam]))
+                        ->visible(fn($record): bool => !$record->check_ins()->exists()),
+
+                    Tables\Actions\Action::make('Check Out')
+                        ->icon('heroicon-s-arrow-left-on-rectangle')
+                        ->color('success')
+                        ->url(function ($record) {
+                            $firstCheckIn = $record->check_ins->first();
+                            return $firstCheckIn ? \App\Filament\Resources\CheckoutResource::getUrl('create', ['checkin_id' => $firstCheckIn->id_checkin]) : '#';
+                        })
+                        ->visible(function ($record): bool {
+                            $firstCheckIn = $record->check_ins->first();
+                            return $firstCheckIn && !$firstCheckIn->checkouts()->exists();
+                        }),
+                ]),
             ]);
     }
 }
