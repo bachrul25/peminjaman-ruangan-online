@@ -33,9 +33,11 @@ const History = () => {
     fetchData();
   })
 
+
   return (
     <div className="w-full min-h-screen bg-white">
       <NavBar />
+
 
       <div className="flex flex-col items-center text-center sm:text-start mt-6 mb-52 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px]">
         <h2 className="w-full mb-2 text-2xl md:text-3xl text-start hind-madurai-bold primary">
@@ -111,9 +113,7 @@ const History = () => {
               </p>
             </div>
           ))}
-        
       </div>
-
 
       <Footer />
     </div>
