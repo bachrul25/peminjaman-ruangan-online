@@ -2,53 +2,19 @@ import { FaUser, FaStar } from "react-icons/fa";
 import '../../assets/css/global.css';
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
-import { checkAvailableRoom } from "../../_services/loans";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const RoomCard = ({ room }) => {
+const RoomCard = ({ room, availability }) => {
   const [ login, setLogin ] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [sessionAvailable1, setSessionAvailable1] = useState(false);
-  const [sessionAvailable2, setSessionAvailable2] = useState(false);
   
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setLogin(true);
     }
+  }, []);
 
-    const today = new Date();
-    const tanggal = today.toISOString().split('T')[0];
-    const idRoom = room?.id_ruangan;
-
-    const checkSesi = async () => {
-      try {
-        const [response1, response2] = await Promise.all([
-          checkAvailableRoom({
-              ruangan_idruangan: idRoom,
-              sesi_idsesi: 1,
-              tanggal_pinjam: tanggal,
-            }),
-          checkAvailableRoom({
-              ruangan_idruangan: idRoom,
-              sesi_idsesi: 2,
-              tanggal_pinjam: tanggal,
-          }),
-        ]);
-
-        
-        if (response1.success) setSessionAvailable1(true);
-        if (response2.success) setSessionAvailable2(true);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    checkSesi();
-  }, [room]);
-
+  const loading = availability === undefined;
 
   return (
     <div className="flex flex-col p-4 bg-white shadow-md rounded-xl">
@@ -96,7 +62,7 @@ const RoomCard = ({ room }) => {
           <>
             <button
                 className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
-                  sessionAvailable1
+                  availability?.session1
                     ? "bg-primary text-white"
                     : "bg-secondary text-white"
                 }`}
@@ -114,7 +80,7 @@ const RoomCard = ({ room }) => {
               </button>
             <button
                 className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
-                  sessionAvailable2
+                  availability?.session2
                     ? "bg-primary text-white"
                     : "bg-secondary text-white"
                 }`}
@@ -134,7 +100,7 @@ const RoomCard = ({ room }) => {
           ) : (
             <>
             <button
-                className="w-full py-2 rounded hind-madurai-bold text-sm sm:text-lg bg-secondary text-white"
+                className="w-full py-2 text-sm text-white rounded hind-madurai-bold sm:text-lg bg-secondary"
                 disabled
               >
                 Login to book

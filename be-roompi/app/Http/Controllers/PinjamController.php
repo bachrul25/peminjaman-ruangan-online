@@ -29,12 +29,12 @@ class PinjamController extends Controller
     }
 
     // Check room availability
-    public function checkAvailability(Request $request)
+    public function checkMultipleAvailability(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ruangan_idruangan' => 'required|exists:ruangans,id_ruangan',
-            'sesi_idsesi' => 'required|exists:sesis,id_sesi',
-            'tanggal_pinjam' => 'required|date|after_or_equal:today'
+            'tanggal_pinjam' => 'required|date|after_or_equal:today',
+            'ruangan_ids' => 'required|array',
+            'ruangan_ids.*' => 'required|exists:ruangans,id_ruangan'
         ]);
 
         if ($validator->fails()) {
@@ -45,20 +45,29 @@ class PinjamController extends Controller
             ], 422);
         }
 
-        $isAvailable = $this->isRoomAvailable(
-            $request->ruangan_idruangan,
-            $request->sesi_idsesi,
-            $request->tanggal_pinjam
-        );
+        $tanggal = $request->tanggal_pinjam;
+        $ruanganIds = $request->ruangan_ids;
+
+        $result = [];
+
+        foreach ($ruanganIds as $id) {
+            $sesi1 = $this->isRoomAvailable($id, 1, $tanggal);
+            $sesi2 = $this->isRoomAvailable($id, 2, $tanggal);
+
+            $result[] = [
+                'id_ruangan' => $id,
+                'session_1_available' => $sesi1,
+                'session_2_available' => $sesi2
+            ];
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Availability checked',
-            'data' => [
-                'available' => $isAvailable
-            ]
+            'message' => 'Availability checked for multiple rooms',
+            'data' => $result
         ], 200);
     }
+
 
     // Transaction (add data)
     public function store(Request $request)

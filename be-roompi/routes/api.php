@@ -54,7 +54,7 @@ Route::prefix('ruangans')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pinjam', [PinjamController::class, 'index']);
     Route::post('/pinjam', [PinjamController::class, 'store']);
-    Route::post('/pinjam/check-availability', [PinjamController::class, 'checkAvailability']);
+    Route::post('/pinjam/check-availability', [PinjamController::class, 'checkMultipleAvailability']);
     Route::get('/pinjam/{id}', [PinjamController::class, 'show']);
     Route::put('/pinjam/{id}', [PinjamController::class, 'update']);
     Route::delete('/pinjam/{id}', [PinjamController::class, 'destroy']);
