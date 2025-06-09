@@ -138,7 +138,7 @@ class PinjamResource extends Resource
             'index' => Pages\ListPinjams::route('/'),
             'create' => Pages\CreatePinjam::route('/create'),
             'edit' => Pages\EditPinjam::route('/{record}/edit'),
-            // 'view' => Pages\ViewPinjam::route('/{record}'),
+            'view' => Pages\ViewPinjam::route('/{record}'),
         ];
     }
 
