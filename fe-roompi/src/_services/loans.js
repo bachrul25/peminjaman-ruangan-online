@@ -20,16 +20,18 @@ import { API } from "../_api";
 
 export const checkMultipleAvailability = async (tanggal_pinjam, ruangan_ids) => {
     try {
-        const response = await API.post('/pinjam/check-availability', {
-            tanggal_pinjam,
-            ruangan_ids,
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            }
-        });
+        if (localStorage.getItem('token')){
+            const response = await API.post('/pinjam/check-availability', {
+                tanggal_pinjam,
+                ruangan_ids,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                }
+            });
 
-        return response.data;
+            return response.data;
+        }
     } catch (error) {
         console.error('Error checking multiple room availability:', error);
         throw error;
@@ -50,9 +52,9 @@ export const createLoan = async (data) => {
     }
 }
 
-export const getLoans = async () => {
+export const getLoans = async (queryString = '') => {
     try {
-        const response = await API.get(`/pinjam`, {
+        const response = await API.get(`/pinjam${queryString}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             }

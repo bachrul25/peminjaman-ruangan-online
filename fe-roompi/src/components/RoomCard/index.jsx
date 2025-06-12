@@ -4,9 +4,12 @@ import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const RoomCard = ({ room, availability }) => {
+const RoomCard = ({ room, availability, besok }) => {
   const navigate = useNavigate();
   const [ login, setLogin ] = useState(false);
+  const [sesi1, setSesi1] = useState(true);
+  const [sesi2, setSesi2] = useState(true);
+  const isBesok = besok;
 
   const handleSessionClick = (session) => {
     navigate(`/detail-room/${room.id_ruangan}?session=${session}`);
@@ -22,6 +25,29 @@ const RoomCard = ({ room, availability }) => {
       setLogin(true);
     }
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+
+      if (isBesok) {
+        // jika booking untuk besok, dua-duanya tersedia
+        setSesi1(true);
+        setSesi2(true);
+      } else {
+        const batas1 = new Date();
+        batas1.setHours(8, 0, 0); 
+        setSesi1(now < batas1);
+
+        const batas2 = new Date();
+        batas2.setHours(13, 0, 0); 
+        setSesi2(now < batas2);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isBesok]);
+
 
   const loading = availability === undefined;
 
@@ -70,44 +96,45 @@ const RoomCard = ({ room, availability }) => {
         { login ? (
           <>
             <button
-                onClick={() => availability?.session1 && handleSessionClick(1)}
-                className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
-                  availability?.session1
-                    ? "bg-primary text-white"
-                    : "bg-secondary text-white"
-                }`}
-                disabled={!availability?.session1}
-              >
-                { loading ? (
-                  <DotLottieReact
-                      src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
-                      loop
-                      autoplay
-                      className="w-8 h-8"
-                  />
-                ) : (
-                  `Sesi 1 (09.00 - 12.00)`
-                )}
-              </button>
+              onClick={() => availability?.session1 && sesi1 && handleSessionClick(1)}
+              className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
+                availability?.session1 && sesi1
+                  ? "bg-primary text-white"
+                  : "bg-gray-400 text-white cursor-not-allowed"
+              }`}
+              disabled={!availability?.session1 || !sesi1}
+            >
+              {loading ? (
+                <DotLottieReact
+                  src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                  loop
+                  autoplay
+                  className="w-8 h-8"
+                />
+              ) : (
+                `Sesi 1 (08.00 - 12.00)`
+              )}
+            </button>
+
             <button
-                onClick={() => availability?.session2 && handleSessionClick(2)}
-                className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
-                  availability?.session2
-                    ? "bg-primary text-white"
-                    : "bg-secondary text-white"
-                }`}
-                disabled={!availability?.session2}
-              >
-                { loading ? (
-                  <DotLottieReact
-                      src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
-                      loop
-                      autoplay
-                      className="w-8 h-8"
-                  />
-                ) : (
-                  `Sesi 2 (13.00 - 16.00)`
-                )}
+              onClick={() => availability?.session2 && sesi2 && handleSessionClick(2)}
+              className={`w-full py-2 flex justify-center text-center items-center rounded hind-madurai-bold text-sm sm:text-lg transition-colors ${
+                availability?.session2 && sesi2
+                  ? "bg-primary text-white"
+                  : "bg-gray-400 text-white cursor-not-allowed"
+              }`}
+              disabled={!availability?.session2 || !sesi2}
+            >
+              {loading ? (
+                <DotLottieReact
+                  src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                  loop
+                  autoplay
+                  className="w-8 h-8"
+                />
+              ) : (
+                `Sesi 2 (13.00 - 17.00)`
+              )}
             </button>
           </>
           ) : (

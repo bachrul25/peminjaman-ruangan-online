@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logoPutih from '../../assets/images/logo-putih.png';
 import bg from '../../assets/images/bg.png';
 import guest from '../../assets/images/guest.png';
-import calender from '../../assets/images/calender.png';
 import location from '../../assets/images/location.png';
 import search from '../../assets/images/search.png';
+import { useNavigate } from 'react-router';
 
-function Hero() {   
+function Hero() {
+    const navigate = useNavigate();
+    const tipe_id = {
+        1: "Rapat",
+        2: "Konferensi"
+    };
+
+    const [selectedTipe, setSelectedTipe] = useState('');
+    const [minCapacity, setMinCapacity] = useState('');
+
+    const handleSubmitFilter = (e) => {
+        e.preventDefault();
+
+        // Buat query parameter untuk URL
+        const params = new URLSearchParams();
+        if (selectedTipe) params.append('tipe_id', selectedTipe);
+        if (minCapacity) params.append('min_capacity', minCapacity);
+
+        // Redirect ke halaman RoomsPage dengan query string
+        navigate(`/rooms?${params.toString()}`);
+    };
+
     return(
         <section className="relative h-[600px] bg-cover bg-center" style={{backgroundImage: `url(${bg})`}}>
             {/* Overlay */}
@@ -23,8 +44,8 @@ function Hero() {
                     </p>
 
                     {/* Search Form */}
-                    <form action="" method="post">
-                        <div className="bg-white rounded-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-center px-4 sm:px-6 py-4">
+                    <form onSubmit={handleSubmitFilter}>
+                        <div className="bg-white rounded-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 items-center px-4 sm:px-6 py-4">
                             {/* Categories */}
                             <div className="flex items-center">
                                 <img src={location} alt="" className="h-6 sm:h-8" />
@@ -33,48 +54,34 @@ function Hero() {
                                     <select
                                         id="categories"
                                         name="categories"
+                                        value={selectedTipe}
+                                        onChange={(e) => setSelectedTipe(e.target.value)}
                                         className="w-full hind-madurai-regular text-sm sm:text-base grey focus:outline-none cursor-pointer"
                                     >
-                                        <option value="">Add room categories</option>
-                                        <option value="option1">Option One</option>
-                                        <option value="option2">Option Two</option>
-                                        <option value="option3">Option Three</option>
-                                        <option value="option4">Option Four</option>
+                                        <option value="">Default categories</option>
+                                        {Object.entries(tipe_id).map(([key, value]) => (
+                                            <option value={key}>{value}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
-
-                            {/* Check In */}
-                            <div className="flex items-center">
-                                <img src={calender} alt="" className="h-6 sm:h-8" />
-                                <div className="ml-2 sm:ml-3 w-full">
-                                    <label className="block text-sm sm:text-base hind-madurai-bold text-start">Date</label>
-                                    <input
-                                        type="date"
-                                        id="dateCheckIn"
-                                        name="dateCheckIn"
-                                        className="w-full hind-madurai-regular text-sm sm:text-base grey focus:outline-none cursor-pointer"
-                                    />
-                                </div>
-                            </div>
-
 
                             {/* Guest */}
                             <div className="flex items-center">
                                 <img src={guest} alt="" className="h-6 sm:h-8" />
                                 <div className="ml-2 sm:ml-3 w-full">
-                                    <label className="block text-sm sm:text-base hind-madurai-bold text-start">Session</label>
-                                    <select
+                                    <label className="block text-sm sm:text-base hind-madurai-bold text-start">Min. Capacity</label>
+                                    <input 
+                                        type="number"
                                         id="session"
                                         name="session"
-                                        className="w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer"
-                                        >
-                                        <option value="">Choose Session</option>
-                                        <option value="1">Session 1</option>
-                                        <option value="2">Session 2</option>
-                                    </select>
+                                        min={1}
+                                        placeholder='Default capacity'
+                                        value={minCapacity}
+                                        onChange={(e) => setMinCapacity(e.target.value)}
+                                        className='w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer' />
                                 </div>
-                                <button className="ml-2 p-3 rounded-full bg-primary text-white">
+                                <button type='submit' className="ml-2 p-3 rounded-full bg-primary text-white cursor-pointer">
                                     <img src={search} alt="" className="" />
                                 </button>
                             </div>

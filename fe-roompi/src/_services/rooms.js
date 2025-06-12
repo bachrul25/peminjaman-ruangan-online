@@ -1,8 +1,8 @@
 import { API } from "../_api";
 
-export const getRooms = async (page = 1) => {
+export const getRooms = async (queryString = '') => {
     try {
-        const response = await API.get(`/ruangans?page=${page}`);
+        const response = await API.get(`/ruangans${queryString}`);
         const resData = response.data.data;
 
         return {

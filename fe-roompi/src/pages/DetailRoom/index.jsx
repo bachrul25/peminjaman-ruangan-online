@@ -17,34 +17,75 @@ function RoomDetail() {
   const [room, setRooms] = useState({});
   const [roomAvailability, setRoomAvailability] = useState({});
   const [tanggalHariIni, setTanggalHariIni] = useState("");
+  const [sesi1Tersedia, setSesi1Tersedia] = useState(true);
+  const [sesi2Tersedia, setSesi2Tersedia] = useState(true);
+  const [isBesok, setIsBesok] = useState(false);
+  const [ login, setLogin ] = useState(false);
+
   
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+
+      if (isBesok) {
+        // jika booking untuk besok, dua-duanya tersedia
+        setSesi1Tersedia(true);
+        setSesi2Tersedia(true);
+      } else {
+        const batas1 = new Date();
+        batas1.setHours(8, 0, 0); 
+        setSesi1Tersedia(now < batas1);
+
+        const batas2 = new Date();
+        batas2.setHours(13, 0, 0); 
+        setSesi2Tersedia(now < batas2);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isBesok]);
+
 
   useEffect(() => {
-    const fetchRoom = async () => {
-      try {
-        const [RoomData] = await Promise.all([
-          showRoom(id_ruangan),
-        ]);
-
-        // Tanggal hari ini
-        const today = new Date();
-        const tanggal = today.toISOString().split('T')[0];
-
-        // Panggil API untuk ketersediaan sesi
-        const availabilityResponse = await checkMultipleAvailability(tanggal, [id_ruangan]);
-
-        setRoomAvailability(availabilityResponse);
-        setTanggalHariIni(tanggal);
-        setRooms(RoomData);
-        
-      } catch (error) {
-        console.error("Error fetching room data:", error);
-        
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      setLogin(true);
     }
-    
-    fetchRoom();
+
+    const fetchRoomAndAvailability = async () => {
+      try {
+        const RoomData = await showRoom(id_ruangan);
+        setRooms(RoomData);
+
+        const now = new Date();
+        const batasJam = new Date(now);
+        batasJam.setHours(17, 0, 0, 0);
+
+        let tanggal;
+        if (now >= batasJam) {
+          const besok = new Date(now);
+          besok.setDate(now.getDate() + 1);
+          tanggal = besok.toISOString().split('T')[0];
+          setIsBesok(true); // ← ← ← ← penting
+        } else {
+          tanggal = now.toISOString().split('T')[0];
+          setIsBesok(false);
+        }
+
+        setTanggalHariIni(tanggal);
+
+        const availabilityResponse = await checkMultipleAvailability(tanggal, [id_ruangan]);
+        setRoomAvailability(availabilityResponse);
+
+      } catch (error) {
+        console.error("Gagal mengambil data ruangan atau ketersediaan:", error);
+      }
+    };
+
+    fetchRoomAndAvailability();
   }, [id_ruangan]);
+
+
   
   const navigate = useNavigate();
   const [ loading, setLoading ] = useState(false);
@@ -75,7 +116,7 @@ function RoomDetail() {
 
       <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px] mt-10 mb-28">
         {/* Back */}
-        <button className="flex items-center gap-2 mb-4 text-lg hind-madurai-bold primary sm:text-xl lg:text-2xl">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 mb-4 text-lg hind-madurai-bold primary sm:text-xl lg:text-2xl">
           <FaChevronLeft />
           Go Back
         </button>
@@ -121,15 +162,15 @@ function RoomDetail() {
           {/* Tanggal */}
           <div className="w-full lg:w-1/3">
             <label className="block mb-2 text-lg text-black hind-madurai-bold sm:text-xl">
-              Choose Date
+              Date
             </label>
             <input
               type="date"
               id="dateCheckIn"
               name="dateCheckIn"
               value={tanggalHariIni}
-              onChange={(e) => setTanggalHariIni(e.target.value)}
-              className="w-full px-4 py-2 text-base border-2 rounded cursor-pointer hind-madurai-bold border-primary primary focus:outline-none"
+              readOnly
+              className="w-full px-4 py-2 text-base border-2 rounded hind-madurai-bold border-primary primary focus:outline-none"
             />
           </div>
 
@@ -143,37 +184,38 @@ function RoomDetail() {
                 <>
                   <button
                     onClick={() => {
-                      if (roomAvailability.data[0].session_1_available) {
+                      if (roomAvailability.data[0].session_1_available && sesi1Tersedia) {
                         setSelectedSession(1);
                       }
                     }}
                     className={`w-full md:w-1/2 px-4 py-2 rounded hind-madurai-bold text-base ${
-                      roomAvailability.data[0].session_1_available
-                          ? selectedSession === 1
-                            ? "bg-secondary primary"
-                            : "bg-primary text-white"
-                          : "bg-secondary text-white cursor-not-allowed"
-                      }`}
-                      disabled={!roomAvailability.data[0].session_1_available}
+                      roomAvailability.data[0].session_1_available && sesi1Tersedia
+                        ? selectedSession === 1
+                          ? "bg-secondary primary"
+                          : "bg-primary text-white"
+                        : "bg-gray-400 text-white cursor-not-allowed"
+                    }`}
+                    disabled={!roomAvailability.data[0].session_1_available || !sesi1Tersedia}
                   >
-                    Sesi 1 (09.00 - 12.00)
+                    Sesi 1 (08.00 - 12.00)
                   </button>
+
                   <button
                     onClick={() => {
-                      if (roomAvailability.data[0].session_2_available) {
+                      if (roomAvailability.data[0].session_2_available && sesi2Tersedia) {
                         setSelectedSession(2);
                       }
                     }}
                     className={`w-full md:w-1/2 px-4 py-2 rounded hind-madurai-bold text-base ${
-                      roomAvailability.data[0].session_2_available
-                          ? selectedSession === 2
-                            ? "bg-secondary primary"
-                            : "bg-primary text-white"
-                          : "bg-secondary text-white cursor-not-allowed"
-                      }`}
-                      disabled={!roomAvailability.data[0].session_2_available}
+                      roomAvailability.data[0].session_2_available && sesi2Tersedia
+                        ? selectedSession === 2
+                          ? "bg-secondary primary"
+                          : "bg-primary text-white"
+                        : "bg-gray-400 text-white cursor-not-allowed"
+                    }`}
+                    disabled={!roomAvailability.data[0].session_2_available || !sesi2Tersedia}
                   >
-                    Sesi 2 (13.00 - 16.00)
+                    Sesi 2 (13.00 - 17.00)
                   </button>
                 </>
               ) : (
@@ -181,7 +223,7 @@ function RoomDetail() {
                     src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
                     loop
                     autoplay
-                    className="w-16 h-16"
+                    className="w-12 h-12"
                 />
               )}
             </div>
@@ -190,22 +232,30 @@ function RoomDetail() {
 
         {/* Tombol Booking */}
         <div className="mt-10">
-          <button 
-          onClick={handleBooking}
-          className={`w-full py-3 text-lg text-white transition rounded-lg ${
-          loading ? "bg-secondary" : "bg-primary"
-          } hind-madurai-bold sm:text-xl hover:bg-teal-800`}>
-            {loading ? (
-              <DotLottieReact
-                src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
-                loop
-                autoplay
-                className="w-8 h-8 mx-auto"
-              />
-            ) : (
-              "BOOKING"
-            )}
-          </button>
+          {login ? (
+            <button 
+            onClick={handleBooking}
+            className={`w-full py-3 text-lg text-white transition rounded-lg ${
+            loading ? "bg-secondary" : "bg-primary"
+            } hind-madurai-bold sm:text-xl hover:bg-teal-800`}>
+              {loading ? (
+                <DotLottieReact
+                  src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                  loop
+                  autoplay
+                  className="w-8 h-8 mx-auto"
+                />
+              ) : (
+                "BOOKING"
+              )}
+            </button>
+          ) : (
+            <button 
+            className="w-full py-3 text-lg text-white rounded-lg hind-madurai-bold sm:text-lg bg-secondary"
+            disabled>
+              Login to book
+            </button>
+          )}
         </div>
       </div>
 

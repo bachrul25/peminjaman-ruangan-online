@@ -89,7 +89,8 @@ class CheckOutController extends Controller
             'check_in.pinjam.ruangan:id_ruangan,nama_ruangan,harga',
             'check_in.pinjam.sesi:id_sesi,nama,start_time,end_time'
         ])
-            ->find($id); // find($id) akan otomatis mencari berdasarkan 'id_checkout' karena sudah di-set di Model
+            ->where('checkin_idcheckin', $id)
+            ->first();
 
         if (!$checkout) {
             return response()->json(['message' => 'Data checkout tidak ditemukan'], 404);

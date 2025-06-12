@@ -40,23 +40,23 @@ class CheckInController extends Controller
     }
 
     /**
-     * Menampilkan detail check-in dengan data relasi yang spesifik (FINAL & DIPERBAIKI).
+     * Menampilkan detail check-in dengan mencari pinjam_idpinjam dari peminjaman yang cocok untuk mengecek apakah peminjaman tersebut sudah check-in atau belum --Rakha .
      */
     public function show($id)
     {
         $checkIn = CheckIn::with([
-            // Inilah bagian yang diperbaiki agar sesuai dengan nama kolom di DB Anda
             'pinjam:id_pinjam,user_iduser,ruangan_idruangan,sesi_idsesi,tanggal_pinjam',
-            'pinjam.user:id_user,name,email,telepon', // Asumsi PK di tabel users adalah id_user
-            'pinjam.ruangan:id_ruangan,nama_ruangan,alamat,kapasitas', // Asumsi PK di tabel ruangans adalah id_ruangan
-            'pinjam.sesi:id_sesi,nama,start_time,end_time' // Asumsi PK di tabel sesis adalah id_sesi
+            'pinjam.user:id_user,name,email,telepon',
+            'pinjam.ruangan:id_ruangan,nama_ruangan,alamat,kapasitas',
+            'pinjam.sesi:id_sesi,nama,start_time,end_time'
         ])
             ->select('id_checkin', 'pinjam_idpinjam', 'tanggal_checkin')
-            ->find($id);
+            ->where('pinjam_idpinjam', $id)
+            ->first(); // Mengambil satu data check-in berdasarkan pinjam_idpinjam
 
         if (!$checkIn) {
             return response()->json([
-                'message' => 'Data check-in tidak ditemukan',
+                'message' => 'Data check-in berdasarkan pinjam_idpinjam tidak ditemukan',
             ], 404);
         }
 
@@ -65,4 +65,5 @@ class CheckInController extends Controller
             'data' => $checkIn,
         ]);
     }
+
 }
