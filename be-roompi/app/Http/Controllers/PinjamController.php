@@ -11,10 +11,17 @@ use Illuminate\Support\Facades\Validator;
 class PinjamController extends Controller
 {
     // Show all transactions
-    public function index(){
-         $pinjam = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->get();
+    public function index(Request $request)
+    {
+        $query = Pinjam::with(['user', 'ruangan.tipe', 'sesi']);
 
-         if ($pinjam->isEmpty()) {
+        if ($request->has('user_id')) {
+            $query->where('user_iduser', $request->user_id); // Pastikan nama kolom benar
+        }
+
+        $pinjam = $query->get();
+
+        if ($pinjam->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found'
@@ -27,6 +34,7 @@ class PinjamController extends Controller
             'data' => $pinjam
         ], 200);
     }
+
 
     // Check room availability
     public function checkMultipleAvailability(Request $request)

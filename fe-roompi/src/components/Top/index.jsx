@@ -11,27 +11,50 @@ const Top = () => {
     const [roomAvailability, setRoomAvailability] = useState({});
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ loading, setLoading ] = useState(true);
+    const [selectedTipe, setSelectedTipe] = useState('');
+    const [minCapacity, setMinCapacity] = useState('');
+    const [isBesok, setIsBesok] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const roomsResponse = await getRooms(currentPage); 
+                const query = new URLSearchParams();
+                const tipe = query.get("tipe_id") || "";
+                const capacity = query.get("min_capacity") || "";
+                const page = parseInt(query.get("page")) || 1;
+
+                setSelectedTipe(tipe);
+                setMinCapacity(capacity);
+                setCurrentPage(page);
+                query.append("page", currentPage);
+                if (selectedTipe) query.append("tipe_id", selectedTipe);
+                if (minCapacity) query.append("min_capacity", minCapacity);
+
+                const roomsResponse = await getRooms(`?${query.toString()}`);
                 const roomsData = roomsResponse.data;
-                setRooms(roomsData); // ini array data ruangan
-                setCurrentPage(roomsResponse.current_page); // current_page dari API
-                
-                // Ambil ID ruangan
+                setRooms(roomsData);
+                setCurrentPage(roomsResponse.current_page);
+
                 const roomIds = roomsData.map(room => room.id_ruangan);
 
-                // Tanggal hari ini
-                const today = new Date();
-                const tanggal = today.toISOString().split('T')[0];
+                const now = new Date();
+                const batasJam = new Date(now);
+                batasJam.setHours(17, 0, 0, 0);
 
-                // Panggil API untuk ketersediaan sesi
+                let tanggal;
+                if (now >= batasJam) {
+                    const besok = new Date(now);
+                    besok.setDate(now.getDate() + 1);
+                    tanggal = besok.toISOString().split('T')[0];
+                    setIsBesok(true); // ← ← ← ← penting
+                } else {
+                    tanggal = now.toISOString().split('T')[0];
+                    setIsBesok(false);
+                }
                 const availabilityResponse = await checkMultipleAvailability(tanggal, roomIds);
-                const availabilityMap = {};
 
+                const availabilityMap = {};
                 if (availabilityResponse.success) {
                     availabilityResponse.data.forEach(item => {
                         availabilityMap[item.id_ruangan] = {
@@ -42,7 +65,6 @@ const Top = () => {
                 }
 
                 setRoomAvailability(availabilityMap);
-                setLoading(false);
             } catch (error) {
                 console.error("Gagal mengambil data ruangan:", error);
             } finally {
@@ -51,13 +73,7 @@ const Top = () => {
         };
 
         fetchData();
-    }, [currentPage]);
-
-    // const handlePageChange = (page) => {
-    //     if (page >= 1 && page <= totalPages) {
-    //         setCurrentPage(page); // trigger fetchData untuk halaman baru
-    //     }
-    // };
+    }, [currentPage, minCapacity, selectedTipe]);
 
     return (
         <section className="bg-white pt-16 pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-[160px]">
@@ -94,7 +110,7 @@ const Top = () => {
                         .sort((a, b) => b.rating - a.rating) // Urutkan berdasarkan rating tertinggi
                         .slice(0, 3)                         // Ambil 3 data teratas
                         .map((room) => (
-                            <RoomCard key={room.id_ruangan} room={room} availability={roomAvailability[room.id_ruangan]} />
+                            <RoomCard key={room.id_ruangan} room={room} availability={roomAvailability[room.id_ruangan]} besok={isBesok} />
                         ))}
                     
                 </div>

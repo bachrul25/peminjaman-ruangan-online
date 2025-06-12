@@ -1,7 +1,5 @@
 import NavBar from "../../components/NavBar";
 import guest from '../../assets/images/guest.png';
-import calender from '../../assets/images/calender.png';
-import location from '../../assets/images/location.png';
 import search from '../../assets/images/search.png';
 import Footer from "../../components/Footer";
 import RoomCard from "../../components/RoomCard";
@@ -11,38 +9,77 @@ import Pagination from "../../components/Pagination";
 import { getRooms } from "../../_services/rooms";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { checkMultipleAvailability } from "../../_services/loans";
+import { useLocation, useNavigate } from "react-router";
 
 
 function RoomsPage() {
-    const [ rooms, setRooms ] = useState([]);
+    const [rooms, setRooms] = useState([]);
     const [roomAvailability, setRoomAvailability] = useState({});
-    const [ currentPage, setCurrentPage ] = useState(1);
-    const [ totalPages, setTotalPages ] = useState(1);
-    const [ loading, setLoading ] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(true);
     const [sortBy, setSortBy] = useState("harga");
+    const [selectedTipe, setSelectedTipe] = useState('');
+    const [minCapacity, setMinCapacity] = useState('');
+    const [isBesok, setIsBesok] = useState(false);
 
+    const location = useLocation();
+    const navigate = useNavigate();
+    const tipe_id = {
+        1: "Rapat",
+        2: "Konferensi"
+    };
+
+    const [filtersReady, setFiltersReady] = useState(false);
 
     useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const tipe = queryParams.get("tipe_id") || "";
+        const capacity = queryParams.get("min_capacity") || "";
+        const page = parseInt(queryParams.get("page")) || 1;
+
+        setSelectedTipe(tipe);
+        setMinCapacity(capacity);
+        setCurrentPage(page);
+        setFiltersReady(true); // tandai bahwa parsing selesai
+    }, [location.search]);
+
+    useEffect(() => {
+        if (!filtersReady) return; // Jangan fetch sampai filter siap
+
         const fetchData = async () => {
             setLoading(true);
             try {
-                const roomsResponse = await getRooms(currentPage); 
+                const query = new URLSearchParams();
+                query.append("page", currentPage);
+                if (selectedTipe) query.append("tipe_id", selectedTipe);
+                if (minCapacity) query.append("min_capacity", minCapacity);
+
+                const roomsResponse = await getRooms(`?${query.toString()}`);
                 const roomsData = roomsResponse.data;
-                setRooms(roomsData); // ini array data ruangan
-                setCurrentPage(roomsResponse.current_page); // current_page dari API
-                setTotalPages(roomsResponse.last_page); // total halaman dari API
-                
-                // Ambil ID ruangan
+                setRooms(roomsData);
+                setCurrentPage(roomsResponse.current_page);
+                setTotalPages(roomsResponse.last_page);
+
                 const roomIds = roomsData.map(room => room.id_ruangan);
 
-                // Tanggal hari ini
-                const today = new Date();
-                const tanggal = today.toISOString().split('T')[0];
+                const now = new Date();
+                const batasJam = new Date(now);
+                batasJam.setHours(17, 0, 0, 0);
 
-                // Panggil API untuk ketersediaan sesi
+                let tanggal;
+                if (now >= batasJam) {
+                    const besok = new Date(now);
+                    besok.setDate(now.getDate() + 1);
+                    tanggal = besok.toISOString().split('T')[0];
+                    setIsBesok(true); // ← ← ← ← penting
+                } else {
+                    tanggal = now.toISOString().split('T')[0];
+                    setIsBesok(false);
+                }
                 const availabilityResponse = await checkMultipleAvailability(tanggal, roomIds);
-                const availabilityMap = {};
 
+                const availabilityMap = {};
                 if (availabilityResponse.success) {
                     availabilityResponse.data.forEach(item => {
                         availabilityMap[item.id_ruangan] = {
@@ -53,7 +90,6 @@ function RoomsPage() {
                 }
 
                 setRoomAvailability(availabilityMap);
-                setLoading(false);
             } catch (error) {
                 console.error("Gagal mengambil data ruangan:", error);
             } finally {
@@ -62,13 +98,25 @@ function RoomsPage() {
         };
 
         fetchData();
-    }, [currentPage]);
+    }, [selectedTipe, minCapacity, currentPage, filtersReady]);
+
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page); // trigger fetchData untuk halaman baru
         }
     };
+
+    // const handlePageChange = (page) => {
+    //     if (page >= 1 && page <= totalPages) {
+    //         const params = new URLSearchParams();
+    //         if (selectedTipe) params.append("tipe_id", selectedTipe);
+    //         if (minCapacity) params.append("min_capacity", minCapacity);
+    //         params.append("page", page);
+    //         navigate(`/rooms?${params.toString()}`);
+    //     }
+    // };
+
     
     return (
         <div className="bg-white">
@@ -77,58 +125,52 @@ function RoomsPage() {
             <div className="mt-4 mb-14 left-0 right-0 z-10 flex flex-col items-center text-white text-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px]">
 
             <div className="w-full px-4 py-6 text-black shadow-lg bg-secondary rounded-4xl sm:px-6 md:px-10 sm:py-8 md:py-10">
-                <form action="" method="post">
-                <div className="grid items-center grid-cols-1 gap-4 px-4 py-4 bg-white rounded-3xl sm:grid-cols-2 md:grid-cols-3 sm:px-6">
+                <form 
+                    onSubmit={(e) => {
+                    e.preventDefault();
+                    const params = new URLSearchParams();
+                    if (selectedTipe) params.append("tipe_id", selectedTipe);
+                    if (minCapacity) params.append("min_capacity", minCapacity);
+                    navigate(`/rooms?${params.toString()}`);
+                }}
+                >
+                <div className="grid items-center grid-cols-1 gap-4 px-4 py-4 bg-white rounded-3xl sm:grid-cols-2 md:grid-cols-2 sm:px-6">
                     {/* Categories */}
                     <div className="flex items-center">
                         <img src={location} alt="" className="h-6 sm:h-8" />
-                        <div className="w-full ml-2 sm:ml-3">
+                        <div className="ml-2 sm:ml-3 w-full">
                             <label className="block text-sm sm:text-base hind-madurai-bold text-start">Categories</label>
                             <select
                                 id="categories"
                                 name="categories"
-                                className="w-full text-sm cursor-pointer hind-madurai-regular sm:text-base grey focus:outline-none"
+                                value={selectedTipe}
+                                onChange={(e) => setSelectedTipe(e.target.value)}
+                                className="w-full hind-madurai-regular text-sm sm:text-base grey focus:outline-none cursor-pointer"
                             >
-                                <option value="">Add room categories</option>
-                                <option value="option1">Option One</option>
-                                <option value="option2">Option Two</option>
-                                <option value="option3">Option Three</option>
-                                <option value="option4">Option Four</option>
+                                <option value="">Default categories</option>
+                                {Object.entries(tipe_id).map(([key, value]) => (
+                                    <option value={key}>{value}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
-
-                    {/* Check In */}
-                    <div className="flex items-center">
-                        <img src={calender} alt="" className="h-6 sm:h-8" />
-                        <div className="w-full ml-2 sm:ml-3">
-                            <label className="block text-sm sm:text-base hind-madurai-bold text-start">Date</label>
-                            <input
-                                type="date"
-                                id="dateCheckIn"
-                                name="dateCheckIn"
-                                className="w-full text-sm cursor-pointer hind-madurai-regular sm:text-base grey focus:outline-none"
-                            />
-                        </div>
-                    </div>
-
 
                     {/* Guest */}
                     <div className="flex items-center">
                         <img src={guest} alt="" className="h-6 sm:h-8" />
-                        <div className="w-full ml-2 sm:ml-3">
-                            <label className="block text-sm sm:text-base hind-madurai-bold text-start">Session</label>
-                            <select
+                        <div className="ml-2 sm:ml-3 w-full">
+                            <label className="block text-sm sm:text-base hind-madurai-bold text-start">Min. Capacity</label>
+                            <input 
+                                type="number"
                                 id="session"
                                 name="session"
-                                className="w-full text-base cursor-pointer hind-madurai-regular grey focus:outline-none"
-                                >
-                                <option value="">Choose Session</option>
-                                <option value="1">Session 1</option>
-                                <option value="2">Session 2</option>
-                            </select>
+                                min={1}
+                                placeholder='Default capacity'
+                                value={minCapacity}
+                                onChange={(e) => setMinCapacity(e.target.value)}
+                                className='w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer' />
                         </div>
-                        <button className="p-3 ml-2 text-white rounded-full bg-primary">
+                        <button type="submit" className="p-3 ml-2 text-white rounded-full bg-primary cursor-pointer">
                             <img src={search} alt="" className="" />
                         </button>
                     </div>
@@ -180,7 +222,7 @@ function RoomsPage() {
                         return 0;
                     })
                     .map((room) => (
-                        <RoomCard key={room.id_ruangan} room={room} availability={roomAvailability[room.id_ruangan]} />
+                        <RoomCard key={room.id_ruangan} room={room} availability={roomAvailability[room.id_ruangan]} besok={isBesok}/>
                     ))}
             </div>
 

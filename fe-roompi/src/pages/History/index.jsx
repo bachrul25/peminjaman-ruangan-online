@@ -5,34 +5,103 @@ import Footer from "../../components/Footer";
 import { getLoans } from '../../_services/loans';
 import { format, formatDistanceToNow } from 'date-fns';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { checkIn, checkOut, getCheckIn, getCheckOut } from '../../_services/check';
 
 const History = () => {
   // const now = new Date();
   const [ historys, setHistory ] = useState([]);
   const [ loading, setLoading ] = useState(true)
-  const isCheckInEnabled = true
-  const isCheckOutEnabled = true
+  const [checkInStatus, setCheckInStatus] = useState({});
+
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const query = new URLSearchParams();
+    query.append("user_id", user['id']);
+
     const fetchData = async () => {
       try {
-        const [ historyData ] = await Promise.all([
-          getLoans(),
+        const [historyData] = await Promise.all([
+          getLoans(`?${query.toString()}`),
         ]);
 
         setHistory(historyData);
-        setLoading(false)
+
+        const statusMap = {};
+
+        await Promise.all(historyData.map(async (item) => {
+          try {
+            const checkInData = await getCheckIn(item.id_pinjam);
+
+            let isCheckedOut = false;
+            let denda = null;
+
+            try {
+              const checkOutData = await getCheckOut(checkInData.id_checkin);
+              isCheckedOut = !!checkOutData;
+              denda = Math.abs(checkOutData?.denda); // Ambil nilai denda dari response
+              console.log(denda);
+              
+            } catch (error) {
+              isCheckedOut = false;
+              denda = null;
+            }
+
+            statusMap[item.id_pinjam] = {
+              isCheckedIn: true,
+              isCheckedOut,
+              checkin_id: checkInData.id_checkin,
+              denda: denda
+            };
+          } catch (error) {
+            statusMap[item.id_pinjam] = {
+              isCheckedIn: false,
+              isCheckedOut: false,
+              checkin_id: null,
+              denda: null
+            };
+          }
+        }));
+
+        setCheckInStatus(statusMap);
       } catch (error) {
-        console.log('Error :', error);
-        throw error;
+        console.log('Error:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     fetchData();
-  })
+  }, []);
 
+  const handleCheckIn = async (id_pinjam) => {
+    try {
+      await checkIn(id_pinjam);
+      window.location.reload(); // atau bisa buat fungsi refreshStatus() khusus
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCheckOut = async (id_pinjam) => {
+    const checkin_id = checkInStatus[id_pinjam]?.checkin_id;
+    if (!checkin_id) return alert('Data check-in tidak ditemukan');
+
+    try {
+      const data = await checkOut(checkin_id);
+
+      setCheckInStatus(prev => ({
+        ...prev,
+        [id_pinjam]: {
+          ...prev[id_pinjam],
+          isCheckedOut: true,
+          denda: data.denda
+        }
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-white">
@@ -73,36 +142,48 @@ const History = () => {
                     <FaClock className="mr-2 primary" />
                     {`${format(new Date(history.tanggal_pinjam), 'dd-MM-yyyy')}, Sesi ${history.sesi_idsesi} (${format(new Date(history?.sesi?.start_time), 'HH:mm')} - ${format(new Date(history?.sesi?.end_time), 'HH:mm')})`}
                   </div>
-                  <div className="flex flex-wrap items-center justify-center text-base md:text-lg grey hind-madurai-regular sm:justify-start">
+                  <div className="flex flex-col items-start justify-center text-base md:text-lg grey hind-madurai-regular sm:justify-start">
                     <p className='italic'>
-                      {formatDistanceToNow(new Date(history.created_at), { addSuffix: true })}
+                      Booking {formatDistanceToNow(new Date(history.created_at), { addSuffix: true })}
                     </p>
-                    
+                    <p>
+                      Denda : {
+                        checkInStatus[history.id_pinjam]?.isCheckedOut
+                          ? `Rp ${checkInStatus[history.id_pinjam]?.denda?.toLocaleString('id-ID') || '-'}`
+                          : '-'
+                      }
+                    </p>
                   </div>
                 </div>
 
                 {/* Tombol Check In / Out */}
                 <div className="flex flex-col items-center justify-center w-full gap-3 sm:w-1/4 sm:items-end">
-                  <button
-                    disabled={!isCheckInEnabled}
-                    className={`${
-                      isCheckInEnabled
-                        ? 'bg-primary hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
-                        : 'bg-secondary cursor-not-allowed'
-                    } text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded transition duration-300 w-full sm:w-auto`}
-                  >
-                    CHECK IN
-                  </button>
-                  <button
-                    disabled={!isCheckOutEnabled}
-                    className={`${
-                      isCheckOutEnabled
-                        ? 'bg-primary hover:bg-[#006f7d] hover:shadow-md cursor-pointer'
-                        : 'bg-secondary cursor-not-allowed'
-                    } text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded transition duration-300 w-full sm:w-auto`}
-                  >
-                    CHECK OUT
-                  </button>
+                  {
+                    checkInStatus[history.id_pinjam]?.isCheckedIn ? (
+                      checkInStatus[history.id_pinjam]?.isCheckedOut ? (
+                        <button
+                          disabled
+                          className="bg-gray-400 text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                        >
+                          BOOKING DONE
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleCheckOut(history.id_pinjam)}
+                          className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                        >
+                          CHECK OUT
+                        </button>
+                      )
+                    ) : (
+                      <button
+                        onClick={() => handleCheckIn(history.id_pinjam)}
+                        className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                      >
+                        CHECK IN
+                      </button>
+                    )
+                  }
                 </div>
               </div>
             ))
