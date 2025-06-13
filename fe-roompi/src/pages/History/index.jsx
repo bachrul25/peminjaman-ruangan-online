@@ -35,13 +35,11 @@ const History = () => {
 
             let isCheckedOut = false;
             let denda = null;
-
+            
             try {
               const checkOutData = await getCheckOut(checkInData.id_checkin);
               isCheckedOut = !!checkOutData;
               denda = Math.abs(checkOutData?.denda); // Ambil nilai denda dari response
-              console.log(denda);
-              
             } catch (error) {
               isCheckedOut = false;
               denda = null;
@@ -54,11 +52,24 @@ const History = () => {
               denda: denda
             };
           } catch (error) {
+            let timeToCheckIn = false;
+            const now = new Date();
+            switch (item?.sesi?.id_sesi) {
+              case 1:
+                const awalCheckInSesi1 = new Date();
+                awalCheckInSesi1.setHours(7, 40, 0);
+                timeToCheckIn = now > awalCheckInSesi1;
+              case 2:
+                const awalCheckInSesi2 = new Date();
+                awalCheckInSesi2.setHours(12, 40, 0);
+                timeToCheckIn = now > awalCheckInSesi2;
+            }
             statusMap[item.id_pinjam] = {
               isCheckedIn: false,
               isCheckedOut: false,
               checkin_id: null,
-              denda: null
+              denda: null,
+              timeToCheckIn
             };
           }
         }));
@@ -163,7 +174,7 @@ const History = () => {
                       checkInStatus[history.id_pinjam]?.isCheckedOut ? (
                         <button
                           disabled
-                          className="bg-gray-400 text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                          className="w-full px-4 py-2 text-base text-white bg-gray-400 rounded hind-madurai-bold md:text-lg sm:w-auto"
                         >
                           BOOKING DONE
                         </button>
@@ -176,13 +187,24 @@ const History = () => {
                         </button>
                       )
                     ) : (
-                      <button
-                        onClick={() => handleCheckIn(history.id_pinjam)}
-                        className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
-                      >
-                        CHECK IN
-                      </button>
+                      checkInStatus[history.id_pinjam]?.timeToCheckIn ? (
+                        <button
+                          onClick={() => handleCheckIn(history.id_pinjam)}
+                          className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                        >
+                          CHECK IN
+                        </button>
+                      ) : (
+                        <button
+                          disabled
+                          className="w-full px-4 py-2 text-base text-white bg-gray-400 rounded hind-madurai-bold md:text-lg sm:w-auto"
+                        >
+                          PENDING SESSION
+                        </button>
+                      )
+                      
                     )
+                    
                   }
                 </div>
               </div>
