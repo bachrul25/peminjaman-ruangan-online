@@ -8,37 +8,31 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\TipeResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TipeResource\RelationManagers;
+use App\Filament\Resources\TipeResource\Pages\ManageTipes;
 
 class TipeResource extends Resource
 {
     protected static ?string $model = Tipe::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $modelLabel = 'Pengaturan Tipe Ruangan';
-    protected static ?string $navigationGroup = 'Manajemen Ruangan';
-    protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'Tipe';
+
+    protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Informasi Tipe Ruangan')
-                    ->description('Masukkan detail tipe ruangan untuk kategorisasi.')
-                    ->schema([
-                        Forms\Components\TextInput::make('nama')
-                            ->required()
-                            ->maxLength(80) //
-                            ->label('Nama Tipe'),
-                        Forms\Components\Textarea::make('deskripsi')
-                            ->required()
-                            ->rows(3)
-                            ->label('Deskripsi Singkat'),
-                    ])
+                Forms\Components\TextInput::make('nama')
+                    ->required()
+                    ->maxLength(80)
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('deskripsi')
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -46,16 +40,17 @@ class TipeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                    ->label('Nama Tipe')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('id_tipe')
+                    ->label('ID')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('deskripsi')
-                    ->label('Deskripsi')
-                    ->limit(50)
-                    ->tooltip(fn(Tipe $record): string => $record->deskripsi),
+                Tables\Columns\TextColumn::make('nama')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y, H:i')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -63,8 +58,8 @@ class TipeResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -73,19 +68,10 @@ class TipeResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTipes::route('/'),
-            'create' => Pages\CreateTipe::route('/create'),
-            'edit' => Pages\EditTipe::route('/{record}/edit'),
+            'index' => ManageTipes::route('/'),
         ];
     }
 }

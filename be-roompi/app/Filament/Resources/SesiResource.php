@@ -2,45 +2,41 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SesiResource\Pages;
-use App\Models\Sesi;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Sesi;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Section; // Import Section
-use Filament\Forms\Components\Grid; // Import Grid
+use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\SesiResource\Pages\ManageSesis;
 
 class SesiResource extends Resource
 {
     protected static ?string $model = Sesi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clock';
-    protected static ?string $modelLabel = 'Pengaturan Sesi';
-    protected static ?string $navigationGroup = 'Manajemen Ruangan';
-    protected static ?int $navigationSort = 3;
+
+    protected static ?string $modelLabel = 'Sesi';
+
+    protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Detail Sesi')
-                    ->description('Atur jadwal sesi peminjaman yang tersedia.')
-                    ->schema([
-                        Forms\Components\TextInput::make('nama') //
-                            ->required()
-                            ->maxLength(100) //
-                            ->label('Nama Sesi (cth: Sesi Pagi)'),
-                        Grid::make(2)->schema([
-                            Forms\Components\TimePicker::make('start_time') //
-                                ->required()
-                                ->label('Waktu Mulai'),
-                            Forms\Components\TimePicker::make('end_time') //
-                                ->required()
-                                ->label('Waktu Selesai'),
-                        ])
-                    ])
+                Forms\Components\TextInput::make('nama')
+                    ->required()
+                    ->maxLength(100)
+                    ->columnSpanFull(),
+                Forms\Components\TimePicker::make('start_time')
+                    ->required()
+                    ->seconds(false),
+                Forms\Components\TimePicker::make('end_time')
+                    ->required()
+                    ->seconds(false)
+                    ->after('start_time'),
             ]);
     }
 
@@ -48,27 +44,30 @@ class SesiResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama') //
-                    ->label('Nama Sesi')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('id_sesi')
+                    ->label('ID')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('nama')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('start_time')
+                    ->time(),
+                Tables\Columns\TextColumn::make('end_time')
+                    ->time(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
                     ->sortable()
-                    ->badge(),
-                Tables\Columns\TextColumn::make('start_time') //
-                    ->time('H:i')
-                    ->icon('heroicon-s-arrow-right-circle')
-                    ->label('Mulai'),
-                Tables\Columns\TextColumn::make('end_time') //
-                    ->time('H:i')
-                    ->icon('heroicon-s-arrow-left-circle')
-                    ->color('danger')
-                    ->label('Selesai'),
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -80,9 +79,7 @@ class SesiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSesis::route('/'),
-            'create' => Pages\CreateSesi::route('/create'),
-            'edit' => Pages\EditSesi::route('/{record}/edit'),
+            'index' => ManageSesis::route('/'),
         ];
     }
 }
