@@ -30,10 +30,10 @@ class SesiResource extends Resource
                     ->required()
                     ->maxLength(100)
                     ->columnSpanFull(),
-                Forms\Components\TimePicker::make('start_time')
+                Forms\Components\DateTimePicker::make('start_time')
                     ->required()
                     ->seconds(false),
-                Forms\Components\TimePicker::make('end_time')
+                Forms\Components\DateTimePicker::make('end_time')
                     ->required()
                     ->seconds(false)
                     ->after('start_time'),

@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SesiController;
+use App\Http\Controllers\TipeController;
 use App\Http\Controllers\PinjamController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\HistoryController;
@@ -24,6 +26,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+
+// Tipe Routes
+Route::resource('tipes', TipeController::class);
+
+// Sesi Routes
+Route::resource('sesis', SesiController::class);
 
 // Check-in Routes
 Route::prefix('checkin')->group(function () {
