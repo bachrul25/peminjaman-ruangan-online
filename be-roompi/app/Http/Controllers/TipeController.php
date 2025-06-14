@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Tipe;
@@ -7,79 +6,50 @@ use Illuminate\Http\Request;
 
 class TipeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $tipes = Tipe::all();
-        return view('tipes.index', compact('tipes'));
+        return response()->json(Tipe::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('tipes.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:80',
             'deskripsi' => 'required|string',
         ]);
 
-        Tipe::create($request->all());
+        $tipe = Tipe::create($validated);
 
-        return redirect()->route('tipes.index')
-            ->with('success', 'Tipe berhasil ditambahkan');
+        return response()->json(['message' => 'Tipe berhasil ditambahkan', 'data' => $tipe], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Tipe $tipe)
     {
-        return view('tipes.show', compact('tipe'));
+        return response()->json($tipe);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Tipe $tipe)
-    {
-        return view('tipes.edit', compact('tipe'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Tipe $tipe)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:80',
             'deskripsi' => 'required|string',
         ]);
 
-        $tipe->update($request->all());
+        $tipe->update($validated);
 
-        return redirect()->route('tipes.index')
-            ->with('success', 'Tipe berhasil diperbarui');
+        return response()->json(['message' => 'Tipe berhasil diperbarui', 'data' => $tipe]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Tipe $tipe)
     {
-        $tipe->delete();
+        if ($tipe->ruangans()->count()) {
+            return response()->json([
+                'message' => 'Tidak bisa menghapus tipe karena masih digunakan di data ruangan.'
+            ], 400);
+        }
 
-        return redirect()->route('tipes.index')
-            ->with('success', 'Tipe berhasil dihapus');
+        $tipe->delete();
+        return response()->json(['message' => 'Tipe berhasil dihapus']);
     }
+
 }

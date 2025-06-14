@@ -8,8 +8,6 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TipeResource\Pages\ManageTipes;
 
 class TipeResource extends Resource
@@ -17,46 +15,48 @@ class TipeResource extends Resource
     protected static ?string $model = Tipe::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-
     protected static ?string $modelLabel = 'Tipe';
-
     protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nama')
-                    ->required()
-                    ->maxLength(80)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('deskripsi')
-                    ->required()
-                    ->columnSpanFull(),
-            ]);
+        return $form->schema([
+            Forms\Components\TextInput::make('nama')
+                ->label('Nama Tipe')
+                ->required()
+                ->maxLength(80)
+                ->columnSpanFull(),
+
+            Forms\Components\Textarea::make('deskripsi')
+                ->label('Deskripsi')
+                ->required()
+                ->columnSpanFull(),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('id_tipe')
-                    ->label('ID')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nama')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
+        return $table->columns([
+            Tables\Columns\TextColumn::make('id_tipe')
+                ->label('ID')
+                ->sortable(),
+
+            Tables\Columns\TextColumn::make('nama')
+                ->label('Nama Tipe')
+                ->searchable(),
+
+            Tables\Columns\TextColumn::make('created_at')
+                ->label('Dibuat')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+
+            Tables\Columns\TextColumn::make('updated_at')
+                ->label('Diperbarui')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
