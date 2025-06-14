@@ -12,71 +12,52 @@ const History = () => {
   const [ historys, setHistory ] = useState([]);
   const [ loading, setLoading ] = useState(true)
   const [checkInStatus, setCheckInStatus] = useState({});
+  const [login, setLogin] = useState(false);
 
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const query = new URLSearchParams();
-    query.append("user_id", user['id']);
-
     const fetchData = async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        setLogin(false);
+        return;
+      }
+
+      setLogin(true);
+
       try {
-        const [historyData] = await Promise.all([
-          getLoans(`?${query.toString()}`),
-        ]);
-
+        const query = new URLSearchParams();
+        query.append("user_id", user['id']);
+        const historyData = await getLoans(`?${query.toString()}`);
+        
         setHistory(historyData);
-
+        
         const statusMap = {};
 
-        await Promise.all(historyData.map(async (item) => {
-          try {
-            const checkInData = await getCheckIn(item.id_pinjam);
+        historyData.forEach(item => {
+          const checkin = item.checkin;
+          const checkout = checkin?.checkout;
 
-            let isCheckedOut = false;
-            let denda = null;
-            
-            try {
-              const checkOutData = await getCheckOut(checkInData.id_checkin);
-              isCheckedOut = !!checkOutData;
-              denda = Math.abs(checkOutData?.denda); // Ambil nilai denda dari response
-            } catch (error) {
-              isCheckedOut = false;
-              denda = null;
-            }
-
-            statusMap[item.id_pinjam] = {
-              isCheckedIn: true,
-              isCheckedOut,
-              checkin_id: checkInData.id_checkin,
-              denda: denda
-            };
-          } catch (error) {
-            let timeToCheckIn = false;
-            const now = new Date();
-            switch (item?.sesi?.id_sesi) {
-              case 1:
-                const awalCheckInSesi1 = new Date();
-                awalCheckInSesi1.setHours(7, 40, 0);
-                timeToCheckIn = now > awalCheckInSesi1;
-              case 2:
-                const awalCheckInSesi2 = new Date();
-                awalCheckInSesi2.setHours(12, 40, 0);
-                timeToCheckIn = now > awalCheckInSesi2;
-            }
-            statusMap[item.id_pinjam] = {
-              isCheckedIn: false,
-              isCheckedOut: false,
-              checkin_id: null,
-              denda: null,
-              timeToCheckIn
-            };
-          }
-        }));
+          statusMap[item.id_pinjam] = {
+            isCheckedIn: !!checkin,
+            isCheckedOut: !!checkout,
+            checkin_id: checkin?.id_checkin || null,
+            denda: checkout ? Math.abs(checkout.denda) : null,
+            timeToCheckIn: (() => {
+              if (checkin) return false;
+              const now = new Date();
+              const tanggalPinjam = new Date(item?.tanggal_pinjam);
+              const sessionStart = new Date(tanggalPinjam);
+              if (item?.sesi?.id_sesi === 1) sessionStart.setHours(7, 40, 0);
+              else if (item?.sesi?.id_sesi === 2) sessionStart.setHours(12, 40, 0);
+              return now > sessionStart;
+            })()
+          };
+        });
 
         setCheckInStatus(statusMap);
       } catch (error) {
-        console.log('Error:', error);
+        console.error('Error:', error);
       } finally {
         setLoading(false);
       }
@@ -125,97 +106,107 @@ const History = () => {
         </h2>
         <div className="w-full border-b-2 border-[#008B9A] mb-6"></div>
 
-        { loading ? (
-          <div className="flex items-center justify-center text-center">
-            <DotLottieReact
-                src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
-                loop
-                autoplay
-                className="w-64 h-64"
-            />
-          </div>
-        ) : ( 
-          historys.length > 0 ? (
-            historys.map((history) => (
-              <div
-                key={history.id_pinjam}
-                className="flex flex-col w-full gap-6 px-6 py-6 mb-6 bg-white border border-gray-300 shadow-sm sm:flex-row rounded-xl sm:px-10 md:px-16 sm:py-8 sm:gap-0"
-              >
-                {/* Konten Deskripsi */}
-                <div className='w-full sm:w-3/4'>
-                  <p className="mb-1 text-lg hind-madurai-bold primary md:text-xl">
-                    {history?.ruangan?.nama_ruangan}
-                  </p>
-                  <p className="mb-1 text-base break-words md:text-lg grey hind-madurai-regular">
-                    {history?.rungan?.alamat}
-                  </p>
-                  <div className="flex flex-wrap items-center justify-center mb-2 text-base md:text-lg grey hind-madurai-regular sm:justify-start">
-                    <FaClock className="mr-2 primary" />
-                    {`${format(new Date(history.tanggal_pinjam), 'dd-MM-yyyy')}, Sesi ${history.sesi_idsesi} (${format(new Date(history?.sesi?.start_time), 'HH:mm')} - ${format(new Date(history?.sesi?.end_time), 'HH:mm')})`}
-                  </div>
-                  <div className="flex flex-col items-start justify-center text-base md:text-lg grey hind-madurai-regular sm:justify-start">
-                    <p className='italic'>
-                      Booking {formatDistanceToNow(new Date(history.created_at), { addSuffix: true })}
+        { 
+        login ? (
+          loading ? (
+            <div className="flex items-center justify-center text-center">
+              <DotLottieReact
+                  src="https://lottie.host/23b16525-b459-4439-8ff8-988cac9361ed/uxoKeCLnsu.lottie"
+                  loop
+                  autoplay
+                  className="w-64 h-64"
+              />
+            </div>
+          ) : ( 
+            historys.length > 0 ? (
+              historys.map((history) => (
+                <div
+                  key={history.id_pinjam}
+                  className="flex flex-col w-full gap-6 px-6 py-6 mb-6 bg-white border border-gray-300 shadow-sm sm:flex-row rounded-xl sm:px-10 md:px-16 sm:py-8 sm:gap-0"
+                >
+                  {/* Konten Deskripsi */}
+                  <div className='w-full sm:w-3/4'>
+                    <p className="mb-1 text-lg hind-madurai-bold primary md:text-xl">
+                      {history?.ruangan?.nama_ruangan}
                     </p>
-                    <p>
-                      Denda : {
-                        checkInStatus[history.id_pinjam]?.isCheckedOut
-                          ? `Rp ${checkInStatus[history.id_pinjam]?.denda?.toLocaleString('id-ID') || '-'}`
-                          : '-'
-                      }
+                    <p className="mb-1 text-base break-words md:text-lg grey hind-madurai-regular">
+                      {history?.rungan?.alamat}
                     </p>
+                    <div className="flex flex-wrap items-center justify-center mb-2 text-base md:text-lg grey hind-madurai-regular sm:justify-start">
+                      <FaClock className="mr-2 primary" />
+                      {`${format(new Date(history.tanggal_pinjam), 'dd-MM-yyyy')}, Sesi ${history.sesi_idsesi} (${format(new Date(history?.sesi?.start_time), 'HH:mm')} - ${format(new Date(history?.sesi?.end_time), 'HH:mm')})`}
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-base md:text-lg grey hind-madurai-regular sm:justify-start">
+                      <p className='italic'>
+                        Booking {formatDistanceToNow(new Date(history.created_at), { addSuffix: true })}
+                      </p>
+                      <p>
+                        Denda : {
+                          checkInStatus[history.id_pinjam]?.isCheckedOut
+                            ? `Rp ${checkInStatus[history.id_pinjam]?.denda?.toLocaleString('id-ID') || '-'}`
+                            : '-'
+                        }
+                      </p>
+                    </div>
                   </div>
-                </div>
-
-                {/* Tombol Check In / Out */}
-                <div className="flex flex-col items-center justify-center w-full gap-3 sm:w-1/4 sm:items-end">
-                  {
-                    checkInStatus[history.id_pinjam]?.isCheckedIn ? (
-                      checkInStatus[history.id_pinjam]?.isCheckedOut ? (
-                        <button
-                          disabled
-                          className="w-full px-4 py-2 text-base text-white bg-gray-400 rounded hind-madurai-bold md:text-lg sm:w-auto"
-                        >
-                          BOOKING DONE
-                        </button>
+  
+                  {/* Tombol Check In / Out */}
+                  <div className="flex flex-col items-center justify-center w-full gap-3 sm:w-1/4 sm:items-end">
+                    {
+                      checkInStatus[history.id_pinjam]?.isCheckedIn ? (
+                        checkInStatus[history.id_pinjam]?.isCheckedOut ? (
+                          <button
+                            disabled
+                            className="w-full px-4 py-2 text-base text-white bg-gray-400 rounded hind-madurai-bold md:text-lg sm:w-auto"
+                          >
+                            BOOKING DONE
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleCheckOut(history.id_pinjam)}
+                            className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                          >
+                            CHECK OUT
+                          </button>
+                        )
                       ) : (
-                        <button
-                          onClick={() => handleCheckOut(history.id_pinjam)}
-                          className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
-                        >
-                          CHECK OUT
-                        </button>
-                      )
-                    ) : (
-                      checkInStatus[history.id_pinjam]?.timeToCheckIn ? (
-                        <button
-                          onClick={() => handleCheckIn(history.id_pinjam)}
-                          className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
-                        >
-                          CHECK IN
-                        </button>
-                      ) : (
-                        <button
-                          disabled
-                          className="w-full px-4 py-2 text-base text-white bg-gray-400 rounded hind-madurai-bold md:text-lg sm:w-auto"
-                        >
-                          PENDING SESSION
-                        </button>
+                        checkInStatus[history.id_pinjam]?.timeToCheckIn ? (
+                          <button
+                            onClick={() => handleCheckIn(history.id_pinjam)}
+                            className="bg-primary hover:bg-[#006f7d] hover:shadow-md text-white hind-madurai-bold text-base md:text-lg px-4 py-2 rounded w-full sm:w-auto"
+                          >
+                            CHECK IN
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="w-full px-4 py-2 text-base text-white bg-gray-400 rounded hind-madurai-bold md:text-lg sm:w-auto"
+                          >
+                            PENDING SESSION
+                          </button>
+                        )
+                        
                       )
                       
-                    )
-                    
-                  }
+                    }
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center w-full h-64">
+                <p className="text-lg text-gray-500 hind-madurai-regular">
+                  No transaction history found.
+                </p>
               </div>
             ))
-          ) : (
-            <div className="flex items-center justify-center w-full h-64">
-              <p className="text-lg text-gray-500 hind-madurai-regular">
-                No transaction history found.
-              </p>
-            </div>
-          ))}
+        ) : (
+          <div className="flex items-center justify-center w-full h-64">
+            <p className="text-lg text-gray-500 hind-madurai-regular">
+              Login to see your history.
+            </p>
+          </div>
+        )
+        }
       </div>
 
       <Footer />

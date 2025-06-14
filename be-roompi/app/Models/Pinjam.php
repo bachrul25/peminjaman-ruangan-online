@@ -62,8 +62,9 @@ class Pinjam extends Model
         return $this->belongsTo(User::class, 'user_iduser');
     }
 
-    public function check_ins()
+    public function checkin()
     {
-        return $this->hasMany(CheckIn::class, 'pinjam_idpinjam');
+        return $this->hasOne(CheckIn::class, 'pinjam_idpinjam');
     }
+
 }

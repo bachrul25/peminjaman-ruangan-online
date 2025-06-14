@@ -10,6 +10,7 @@ import { getRooms } from "../../_services/rooms";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { checkMultipleAvailability } from "../../_services/loans";
 import { useLocation, useNavigate } from "react-router";
+import { getTypes } from "../../_services/types";
 
 
 function RoomsPage() {
@@ -25,14 +26,22 @@ function RoomsPage() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const tipe_id = {
-        1: "Rapat",
-        2: "Konferensi"
-    };
+    const [types, setType] = useState([])
 
     const [filtersReady, setFiltersReady] = useState(false);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const typeData = await getTypes();
+                setType(typeData)
+            } catch (error) {
+                
+            }
+        }
+
+        fetchData();
+        
         const queryParams = new URLSearchParams(location.search);
         const tipe = queryParams.get("tipe_id") || "";
         const capacity = queryParams.get("min_capacity") || "";
@@ -50,6 +59,7 @@ function RoomsPage() {
         const fetchData = async () => {
             setLoading(true);
             try {
+
                 const query = new URLSearchParams();
                 query.append("page", currentPage);
                 if (selectedTipe) query.append("tipe_id", selectedTipe);
@@ -134,22 +144,22 @@ function RoomsPage() {
                     navigate(`/rooms?${params.toString()}`);
                 }}
                 >
-                <div className="grid items-center grid-cols-1 gap-4 px-4 py-4 bg-white rounded-3xl sm:grid-cols-2 md:grid-cols-2 sm:px-6">
+                <div className="grid items-center grid-cols-1 gap-8 px-4 py-4 bg-white rounded-3xl sm:grid-cols-2 md:grid-cols-2 sm:px-6">
                     {/* Categories */}
                     <div className="flex items-center">
                         <img src={location} alt="" className="h-6 sm:h-8" />
-                        <div className="ml-2 sm:ml-3 w-full">
+                        <div className="w-full ml-2 mr-4 sm:ml-3">
                             <label className="block text-sm sm:text-base hind-madurai-bold text-start">Categories</label>
                             <select
                                 id="categories"
                                 name="categories"
                                 value={selectedTipe}
                                 onChange={(e) => setSelectedTipe(e.target.value)}
-                                className="w-full hind-madurai-regular text-sm sm:text-base grey focus:outline-none cursor-pointer"
+                                className="w-full text-sm cursor-pointer hind-madurai-regular sm:text-base grey focus:outline-none"
                             >
                                 <option value="">Default categories</option>
-                                {Object.entries(tipe_id).map(([key, value]) => (
-                                    <option value={key}>{value}</option>
+                                {types.map((type) => (
+                                    <option value={type.id_tipe}>{type.nama}</option>
                                 ))}
                             </select>
                         </div>
@@ -158,7 +168,7 @@ function RoomsPage() {
                     {/* Guest */}
                     <div className="flex items-center">
                         <img src={guest} alt="" className="h-6 sm:h-8" />
-                        <div className="ml-2 sm:ml-3 w-full">
+                        <div className="w-full ml-2 sm:ml-3">
                             <label className="block text-sm sm:text-base hind-madurai-bold text-start">Min. Capacity</label>
                             <input 
                                 type="number"
@@ -168,9 +178,9 @@ function RoomsPage() {
                                 placeholder='Default capacity'
                                 value={minCapacity}
                                 onChange={(e) => setMinCapacity(e.target.value)}
-                                className='w-full hind-madurai-regular text-base grey focus:outline-none cursor-pointer' />
+                                className='w-full text-base cursor-pointer hind-madurai-regular grey focus:outline-none' />
                         </div>
-                        <button type="submit" className="p-3 ml-2 text-white rounded-full bg-primary cursor-pointer">
+                        <button type="submit" className="p-3 ml-2 text-white rounded-full cursor-pointer bg-primary">
                             <img src={search} alt="" className="" />
                         </button>
                     </div>

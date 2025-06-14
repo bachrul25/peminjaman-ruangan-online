@@ -13,7 +13,13 @@ class PinjamController extends Controller
     // Show all transactions
     public function index(Request $request)
     {
-        $query = Pinjam::with(['user', 'ruangan.tipe', 'sesi']);
+        $query = Pinjam::with([
+            'user',
+            'ruangan.tipe',
+            'sesi',
+            'checkin.checkout' // tambahkan eager loading ini
+        ]);
+
 
         if ($request->has('user_id')) {
             $query->where('user_iduser', $request->user_id); // Pastikan nama kolom benar

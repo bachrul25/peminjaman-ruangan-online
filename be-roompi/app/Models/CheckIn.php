@@ -45,9 +45,9 @@ class CheckIn extends Model
         return $this->belongsTo(Pinjam::class, 'pinjam_idpinjam');
     }
 
-
-    public function checkouts()
+    public function checkout()
     {
-        return $this->hasMany(Checkout::class, 'checkin_idcheckin');
+        return $this->hasOne(Checkout::class, 'checkin_idcheckin');
     }
+
 }
