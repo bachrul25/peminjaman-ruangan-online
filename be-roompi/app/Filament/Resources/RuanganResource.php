@@ -23,7 +23,7 @@ class RuanganResource extends Resource
     protected static ?string $model = Ruangan::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
-    protected static ?string $navigationGroup = '📁 Manajemen Data';
+    protected static ?string $navigationGroup = 'Manajemen Data';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Data Ruangan';
     protected static ?string $modelLabel = 'Ruangan';

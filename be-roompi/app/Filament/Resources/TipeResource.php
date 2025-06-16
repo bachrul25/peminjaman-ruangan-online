@@ -16,7 +16,8 @@ class TipeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $modelLabel = 'Tipe';
-    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationLabel = 'Data Tipe';
+    protected static ?string $navigationGroup = 'Manajemen Data';
 
     public static function form(Form $form): Form
     {

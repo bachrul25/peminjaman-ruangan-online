@@ -37,39 +37,38 @@ class AktivitasPeminjamanTerkini extends BaseWidget
                     ->dateTime('d M Y, H:i')
                     ->label('Tanggal Pinjam'),
 
-                // TETAP SAMA: Memanggil relasi 'check_ins' dari model Pinjam
+                // TETAP SAMA: Memanggil relasi 'checkin' dari model Pinjam
                 Tables\Columns\IconColumn::make('status_checkin_custom')
                     ->label('Status Check-in')
                     ->boolean()
-                    ->state(fn($record): bool => $record->check_ins()->exists())
+                    ->state(fn($record): bool => $record->checkin()->exists())
                     ->trueIcon('heroicon-o-check-circle')
                     ->trueColor('success')
                     ->falseIcon('heroicon-o-x-circle')
                     ->falseColor('danger'),
 
-                // DISESUAIKAN: Memanggil relasi 'checkouts' dari model CheckIn
+                // DISESUAIKAN: Memanggil relasi 'checkout' dari model CheckIn
                 Tables\Columns\IconColumn::make('status_checkout_custom')
                     ->label('Status Check-Out')
                     ->boolean()
                     ->state(function ($record): bool {
-                        $firstCheckIn = $record->check_ins->first();
-                        // Memeriksa apakah check-in ada, lalu memanggil relasi 'checkouts()'
-                        return $firstCheckIn ? $firstCheckIn->checkouts()->exists() : false;
+                        $firstCheckIn = $record->checkin->first();
+                        // Memeriksa apakah check-in ada, lalu memanggil relasi 'checkout()'
+                        return $firstCheckIn ? $firstCheckIn->checkout()->exists() : false;
                     })
                     ->trueIcon('heroicon-o-check-circle')
                     ->trueColor('primary')
                     ->falseIcon('heroicon-o-x-circle')
                     ->falseColor('warning'),
 
-                // DISESUAIKAN: Mengambil denda dari relasi 'checkouts'
+                // DISESUAIKAN: Mengambil denda dari relasi 'checkout'
                 Tables\Columns\TextColumn::make('denda_custom')
                     ->label('Denda')
                     ->money('IDR')
-                    // Mengambil denda dari data checkout pertama yang ditemukan
-                    ->state(fn($record) => $record->check_ins->first()?->checkouts->first()?->denda)
+                    ->state(fn($record) => $record->checkin?->checkout?->denda)
                     ->badge()
                     ->color('danger'),
-            ])
+                ])
             // ... (bagian ->columns([...]) tetap sama) ...
 
             // GANTI appendActions MENJADI actions
@@ -81,18 +80,18 @@ class AktivitasPeminjamanTerkini extends BaseWidget
                     Tables\Actions\Action::make('Check In')
                         ->icon('heroicon-s-arrow-right-on-rectangle')
                         ->url(fn($record) => \App\Filament\Resources\CheckInResource::getUrl('create', ['pinjam_id' => $record->id_pinjam]))
-                        ->visible(fn($record): bool => !$record->check_ins()->exists()),
+                        ->visible(fn($record): bool => !$record->checkin()->exists()),
 
                     Tables\Actions\Action::make('Check Out')
                         ->icon('heroicon-s-arrow-left-on-rectangle')
                         ->color('success')
                         ->url(function ($record) {
-                            $firstCheckIn = $record->check_ins->first();
+                            $firstCheckIn = $record->checkin->first();
                             return $firstCheckIn ? \App\Filament\Resources\CheckoutResource::getUrl('create', ['checkin_id' => $firstCheckIn->id_checkin]) : '#';
                         })
                         ->visible(function ($record): bool {
-                            $firstCheckIn = $record->check_ins->first();
-                            return $firstCheckIn && !$firstCheckIn->checkouts()->exists();
+                            $firstCheckIn = $record->checkin->first();
+                            return $firstCheckIn && !$firstCheckIn->checkout()->exists();
                         }),
                 ]),
             ]);

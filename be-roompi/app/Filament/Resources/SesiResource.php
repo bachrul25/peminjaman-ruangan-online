@@ -20,7 +20,9 @@ class SesiResource extends Resource
 
     protected static ?string $modelLabel = 'Sesi';
 
-    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationLabel = 'Data Sesi';
+
+    protected static ?string $navigationGroup = 'Manajemen Data';
 
     public static function form(Form $form): Form
     {

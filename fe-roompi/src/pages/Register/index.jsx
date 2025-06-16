@@ -9,7 +9,7 @@ import { registerUser } from '../../_services/auth';
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
+    telepon: '',
     email: '',
     password: '',
   });
@@ -110,14 +110,14 @@ const Register = () => {
               </label>
               <input
                 type="text"
-                name="phone"
+                name="telepon"
                 placeholder="e.g. 085125250375"
                 className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-main text-base sm:text-lg grey"
                 required
-                value={formData.phone}
+                value={formData.telepon}
                 onChange={handleChange}
               />
-              {error?.phone && <span className="text-red-500 text-sm">{error.phone[0]}</span>}
+              {error?.telepon && <span className="text-red-500 text-sm">{error.telepon[0]}</span>}
             </div>
 
             {/* Email */}

@@ -15,7 +15,7 @@ class CheckInResource extends Resource
 {
     protected static ?string $model = CheckIn::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-left-on-rectangle';
     protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $navigationLabel = 'Data Check-In';
 
