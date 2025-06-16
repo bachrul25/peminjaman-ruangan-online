@@ -26,8 +26,6 @@ function Home() {
 
         <Testimonials />
 
-        <Newsletter />
-
         <Partner />
 
         <Footer />

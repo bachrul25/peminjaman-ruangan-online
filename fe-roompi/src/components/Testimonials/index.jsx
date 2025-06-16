@@ -45,11 +45,11 @@ const Testimonials = () => {
           ))}
         </div>
         {/* Optional dots for pagination */}
-        <div className="flex justify-center mt-8 gap-2">
+        {/* <div className="flex justify-center mt-8 gap-2">
           <span className="w-3 h-3 bg-white rounded-full opacity-70"></span>
           <span className="w-3 h-3 bg-white rounded-full opacity-40"></span>
           <span className="w-3 h-3 bg-white rounded-full opacity-40"></span>
-        </div>
+        </div> */}
       </div>
     </section>
   );
