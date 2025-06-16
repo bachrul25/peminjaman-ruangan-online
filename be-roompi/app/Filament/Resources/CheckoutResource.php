@@ -15,7 +15,7 @@ class CheckoutResource extends Resource
 {
     protected static ?string $model = Checkout::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-left-on-rectangle';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
     protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $navigationLabel = 'Data Check-Out';
 
@@ -52,7 +52,7 @@ class CheckoutResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('checkin.pinjam.user.name')
+                Tables\Columns\TextColumn::make('check_in.pinjam.user.name')
                     ->label('Peminjam')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('waktu_checkout') //

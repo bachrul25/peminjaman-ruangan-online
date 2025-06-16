@@ -21,9 +21,9 @@ class PinjamResource extends Resource
     protected static ?string $model = Pinjam::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
-    protected static ?string $navigationGroup = '📁 Manajemen Data';
+    protected static ?string $navigationGroup = 'Transaksi';
     protected static ?int $navigationSort = 2;
-    protected static ?string $modelLabel = 'Peminjaman';
+    protected static ?string $modelLabel = 'Data Peminjaman';
 
     public static function form(Form $form): Form
     {
