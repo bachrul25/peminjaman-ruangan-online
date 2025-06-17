@@ -190,7 +190,7 @@ function RoomsPage() {
             </div>
 
             {/* Grid Layout dan Header */}
-            <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px] mt-10 sm:mt-12 md:mt-14">
+            <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[160px] mt-10 sm:mt-12 mb-10 md:mt-14">
             <div className="flex flex-col justify-between gap-4 mb-6 sm:flex-row sm:items-center sm:mb-10 md:mb-11">
                 <h2 className="text-2xl text-black sm:text-3xl lg:text-4xl hind-madurai-bold">
                 ROOMPI'S ROOM
@@ -245,7 +245,7 @@ function RoomsPage() {
             </div>
 
 
-            <Newsletter />
+            {/* <Newsletter /> */}
             
             <Footer />
         </div>
