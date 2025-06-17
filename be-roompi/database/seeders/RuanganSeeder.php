@@ -20,7 +20,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung A Lantai 2',
                 'kapasitas' => 10,
                 'harga' => 200000,
-                'foto_ruangan' => 'ruangan_summeracon.jpg',
+                'foto_ruangan' => 'ruangan_summeracon.png',
                 'rating' => 4.5,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -31,7 +31,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung Utama Lantai 1',
                 'kapasitas' => 100,
                 'harga' => 1500000,
-                'foto_ruangan' => 'aula_besar.jpg',
+                'foto_ruangan' => 'aula_besar.jpeg',
                 'rating' => 4.0,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -42,7 +42,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung B Lantai 3',
                 'kapasitas' => 8,
                 'harga' => 150000,
-                'foto_ruangan' => 'ruang_diskusi_a.jpg',
+                'foto_ruangan' => 'ruang_diskusi_a.jpeg',
                 'rating' => 4.2,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -53,7 +53,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung A Lantai 1',
                 'kapasitas' => 10,
                 'harga' => 180000,
-                'foto_ruangan' => 'ruang_meeting_sunrise.jpg',
+                'foto_ruangan' => 'ruang_meeting_sunrise.jpeg',
                 'rating' => 4.3,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -64,7 +64,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung C Lantai 2',
                 'kapasitas' => 6,
                 'harga' => 130000,
-                'foto_ruangan' => 'ruang_kolaborasi.jpg',
+                'foto_ruangan' => 'ruang_kolaborasi.jpeg',
                 'rating' => 4.1,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -75,7 +75,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung Utama Lantai 2',
                 'kapasitas' => 120,
                 'harga' => 1600000,
-                'foto_ruangan' => 'aula_merdeka.jpg',
+                'foto_ruangan' => 'aula_merdeka.jpeg',
                 'rating' => 4.6,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -86,7 +86,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung D Lantai 1',
                 'kapasitas' => 80,
                 'harga' => 1100000,
-                'foto_ruangan' => 'ruang_seminar_alpha.jpg',
+                'foto_ruangan' => 'ruang_seminar_alpha.jpeg',
                 'rating' => 4.0,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -97,7 +97,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung B Lantai 1',
                 'kapasitas' => 150,
                 'harga' => 1800000,
-                'foto_ruangan' => 'auditorium_b.jpg',
+                'foto_ruangan' => 'auditorium_b.jpeg',
                 'rating' => 4.7,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -108,7 +108,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung C Lantai 1',
                 'kapasitas' => 12,
                 'harga' => 200000,
-                'foto_ruangan' => 'ruang_inovasi.jpg',
+                'foto_ruangan' => 'ruang_inovasi.jpeg',
                 'rating' => 4.4,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -119,7 +119,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung A Lantai 3',
                 'kapasitas' => 8,
                 'harga' => 250000,
-                'foto_ruangan' => 'ruang_eksekutif.jpg',
+                'foto_ruangan' => 'ruang_eksekutif.jpeg',
                 'rating' => 4.8,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -130,7 +130,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung D Lantai 2',
                 'kapasitas' => 70,
                 'harga' => 1000000,
-                'foto_ruangan' => 'ruang_presentasi.jpg',
+                'foto_ruangan' => 'ruang_presentasi.jpeg',
                 'rating' => 4.2,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -141,7 +141,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung B Lantai 2',
                 'kapasitas' => 5,
                 'harga' => 120000,
-                'foto_ruangan' => 'ruang_konsultasi.jpg',
+                'foto_ruangan' => 'ruang_konsultasi.jpeg',
                 'rating' => 4.0,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -152,7 +152,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung E Lantai Dasar',
                 'kapasitas' => 200,
                 'harga' => 2000000,
-                'foto_ruangan' => 'hall_nusantara.jpg',
+                'foto_ruangan' => 'hall_nusantara.jpeg',
                 'rating' => 4.9,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -163,7 +163,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung C Lantai 4',
                 'kapasitas' => 9,
                 'harga' => 160000,
-                'foto_ruangan' => 'ruang_inspirasi.jpg',
+                'foto_ruangan' => 'ruang_inspirasi.jpeg',
                 'rating' => 4.1,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -174,7 +174,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung F Lantai 1',
                 'kapasitas' => 50,
                 'harga' => 800000,
-                'foto_ruangan' => 'ruang_workshop.jpg',
+                'foto_ruangan' => 'ruang_workshop.jpeg',
                 'rating' => 4.3,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -185,7 +185,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung G Lantai 2',
                 'kapasitas' => 130,
                 'harga' => 1750000,
-                'foto_ruangan' => 'auditorium_c.jpg',
+                'foto_ruangan' => 'auditorium_c.jpeg',
                 'rating' => 4.6,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -196,7 +196,7 @@ class RuanganSeeder extends Seeder
                 'alamat' => 'Gedung B Lantai 4',
                 'kapasitas' => 7,
                 'harga' => 140000,
-                'foto_ruangan' => 'ruang_startup.jpg',
+                'foto_ruangan' => 'ruang_startup.jpeg',
                 'rating' => 4.2,
                 'created_at' => now(),
                 'updated_at' => now()

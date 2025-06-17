@@ -3,6 +3,7 @@ import '../../assets/css/global.css';
 import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { imageStorage } from "../../_api";
 
 const RoomCard = ({ room, availability, besok }) => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const RoomCard = ({ room, availability, besok }) => {
       {/* Gambar + Rating */}
       <div className="relative overflow-hidden rounded-xl">
         <img
-          src={room.image}
+          src={`${imageStorage}/ruangan/${room.foto_ruangan}`}
           alt={room.nama_ruangan}
           className="object-cover w-full h-40 md:h-56"
         />
