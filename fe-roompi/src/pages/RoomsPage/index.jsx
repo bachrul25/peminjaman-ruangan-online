@@ -245,7 +245,7 @@ function RoomsPage() {
             </div>
 
 
-            <Newsletter />
+            {/* <Newsletter /> */}
             
             <Footer />
         </div>
