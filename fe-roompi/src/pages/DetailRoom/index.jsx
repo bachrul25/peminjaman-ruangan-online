@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { showRoom } from '../../_services/rooms';
 import { checkMultipleAvailability, createLoan } from '../../_services/loans';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { imageStorage } from '../../_api';
 
 function RoomDetail() {
   const location = useLocation();
@@ -125,8 +126,8 @@ function RoomDetail() {
         <div className="pt-6 mt-4 border-t-2 border-primary">
           <div className="overflow-hidden rounded-3xl">
             <img
-              src={imgDummy}
-              alt="Bohe Room"
+              src={`${imageStorage}/ruangan/${room.foto_ruangan}`}
+              alt={room.nama_ruangan}
               className="object-cover w-full h-64 sm:h-80 md:h-96"
             />
           </div>
