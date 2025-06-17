@@ -14,7 +14,7 @@ const BookingSuccess = () => {
       <main className="flex flex-col items-center justify-center px-4 py-16 text-center">
         <h1 className="mb-4 text-2xl font-semibold">Great! Your room has been successfully booked.</h1>
         <p className="mb-10 text-base text-gray-700">
-          Please check your Whatsapp for proof of order confirmation<br />
+          Please check your Email for proof of order confirmation<br />
           and payment for your order.
         </p>
 
