@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Ruangan $ruangan
  * @property Sesi $sesi
  * @property User $user
- * @property Collection|CheckIn[] $check_ins
+ * @property Collection|CheckIn[] $checkin
  *
  * @package App\Models
  */
