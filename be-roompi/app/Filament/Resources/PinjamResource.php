@@ -95,7 +95,7 @@ class PinjamResource extends Resource
 
                 TextColumn::make('check_ins_count')
                     ->label('Check-in')
-                    ->counts('check_ins')
+                    ->counts('checkin')
                     ->badge()
                     ->color(fn(int $state): string => match (true) {
                         $state > 0 => 'success',
@@ -146,6 +146,6 @@ class PinjamResource extends Resource
     {
         return parent::getEloquentQuery()
             ->with(['user', 'ruangan', 'sesi'])
-            ->withCount('check_ins');
+            ->withCount('checkin');
     }
 }
