@@ -58,11 +58,11 @@ class CheckInResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -72,7 +72,7 @@ class CheckInResource extends Resource
         return [
             'index' => Pages\ListCheckIns::route('/'),
             'create' => Pages\CreateCheckIn::route('/create'),
-            'edit' => Pages\EditCheckIn::route('/{record}/edit'),
+            // 'edit' => Pages\EditCheckIn::route('/{record}/edit'),
         ];
     }
 }

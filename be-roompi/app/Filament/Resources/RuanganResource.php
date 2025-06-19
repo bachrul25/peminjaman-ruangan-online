@@ -10,9 +10,12 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RuanganResource\Pages;
@@ -58,7 +61,7 @@ class RuanganResource extends Resource
                     ])
                     ->columns(2),
 
-                Forms\Components\Section::make('Detail Kapasitas & Harga')
+                Section::make('Detail Kapasitas & Harga')
                     ->schema([
                         TextInput::make('kapasitas')
                             ->label('Kapasitas (orang)')
@@ -74,6 +77,22 @@ class RuanganResource extends Resource
                             ->required()
                             ->minValue(0)
                             ->step(1000),
+
+                        FileUpload::make('foto_ruangan')
+                            ->label('Foto Ruangan')
+                            ->image()
+                            ->imageEditor()
+                            ->directory('foto-ruangan') // folder di storage/app/public/foto-ruangan
+                            ->required(),
+
+                        TextInput::make('rating')
+                            ->label('Rating')
+                            ->numeric()
+                            ->step(0.1)
+                            ->minValue(0)
+                            ->maxValue(5)
+                            ->default(0)
+                            ->required(),
                     ])
                     ->columns(2),
             ]);
@@ -116,6 +135,16 @@ class RuanganResource extends Resource
                     ->label('Total Peminjaman')
                     ->counts('pinjams')
                     ->sortable(),
+
+                ImageColumn::make('foto_ruangan')
+                    ->label('Foto')
+                    ->disk('public')
+                    ->height(80),
+
+                TextColumn::make('rating')
+                    ->label('Rating')
+                    ->sortable()
+                    ->searchable(),
 
                 TextColumn::make('created_at')
                     ->label('Dibuat')

@@ -153,7 +153,7 @@ class PinjamController extends Controller
     // Show detail peminjaman
     public function show(string $id)
     {
-        $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->find($id);
+        $pinjams = Pinjam::with(['user', 'ruangan.tipe', 'sesi'])->find($id); // apa ditambah ini ya -> 'checkin.checkout'
 
         if (!$pinjams) {
             return response()->json([

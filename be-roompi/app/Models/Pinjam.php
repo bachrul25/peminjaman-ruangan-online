@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Ruangan $ruangan
  * @property Sesi $sesi
  * @property User $user
- * @property Collection|CheckIn[] $check_ins
+ * @property Collection|CheckIn[] $checkin
  *
  * @package App\Models
  */
@@ -59,8 +59,9 @@ class Pinjam extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_iduser');
+        return $this->belongsTo(User::class, 'user_iduser', 'id_user');
     }
+
 
     public function checkin()
     {
