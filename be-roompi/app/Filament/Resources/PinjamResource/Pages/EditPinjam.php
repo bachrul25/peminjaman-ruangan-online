@@ -18,4 +18,14 @@ class EditPinjam extends EditRecord
             Actions\RestoreAction::make(),
         ];
     }
+
+    // protected function mutateFormDataBeforeFill(array $data): array
+    // {
+    //     unset($data['checkin_count']); // buang field yang tidak perlu
+    //     return $data;
+    // }
+
+
+
+
 }

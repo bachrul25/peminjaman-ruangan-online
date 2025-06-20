@@ -89,18 +89,14 @@ class PinjamResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('tanggal_pinjam')
-                    ->label('Tanggal')
-                    ->date('d M Y')
-                    ->sortable(),
+                    ->label('Tanggal Pinjam')
+                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->translatedFormat('l, d M Y')),
 
-                TextColumn::make('check_ins_count')
-                    ->label('Check-in')
-                    ->counts('checkin')
-                    ->badge()
-                    ->color(fn(int $state): string => match (true) {
-                        $state > 0 => 'success',
-                        default => 'gray',
-                    }),
+                // TextColumn::make('checkin.tanggal_checkin')
+                //     ->label('Tanggal Check-in')
+                //     ->date('d M Y')
+                //     ->sortable(),
+
             ])
             ->defaultSort('tanggal_pinjam', 'desc')
             ->filters([
@@ -125,12 +121,12 @@ class PinjamResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            CheckInsRelationManager::class,
-        ];
-    }
+    // public static function getRelations(): array
+    // {
+    //     return [
+    //         CheckInsRelationManager::class,
+    //     ];
+    // }
 
     public static function getPages(): array
     {
@@ -145,7 +141,7 @@ class PinjamResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['user', 'ruangan', 'sesi'])
-            ->withCount('checkin');
+            ->with(['user', 'ruangan', 'sesi']);
+
     }
 }
