@@ -124,7 +124,7 @@ class ViewRuangan extends ViewRecord
     protected function getHeaderWidgets(): array
     {
         return [
-            RuanganResource\Widgets\RuanganStats::class,
+            \App\Filament\Resources\RuanganResource\Widgets\RuanganStats::class,
         ];
     }
 }

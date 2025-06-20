@@ -63,7 +63,7 @@ class UserResource extends Resource
                     ->label('Role')
                     ->options([
                         'admin' => 'Admin',
-                        'user' => 'User',
+                        'member' => 'Member',
                     ])
                     ->required(),
 

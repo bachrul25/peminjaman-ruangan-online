@@ -6,55 +6,22 @@ use App\Models\Ruangan;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Card;
 
-class RuanganStats extends BaseWidget
+class RuanganStats extends StatsOverviewWidget
 {
-    protected int|string|array $columnSpan = 'full';
-
-    public function table(Table $table): Table
+    protected function getCards(): array
     {
-        return $table
-            ->query(function () {
-                $ruangan = $this->getOwnerRecord();
-                return $ruangan->pinjams()->getQuery();
-            })
-            ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->label('Peminjam')
-                    ->searchable()
-                    ->sortable(),
+        $ruanganId = request()->route('record');
+        $ruangan = Ruangan::find($ruanganId);
 
-                Tables\Columns\TextColumn::make('tanggal_pinjam')
-                    ->label('Tanggal Pinjam')
-                    ->date('d M Y')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('tanggal_selesai')
-                    ->label('Tanggal Selesai')
-                    ->date('d M Y')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'pending' => 'warning',
-                        'approved' => 'success',
-                        'rejected' => 'danger',
-                        'completed' => 'info',
-                        default => 'gray',
-                    })
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Waktu Permintaan')
-                    ->dateTime('d M Y H:i')
-                    ->sortable(),
-            ])
-            ->heading('Riwayat Peminjaman')
-            ->description('Daftar peminjaman untuk ruangan ini')
-            ->emptyStateHeading('Belum ada riwayat peminjaman')
-            ->emptyStateDescription('Ruangan ini belum pernah dipinjam.')
-            ->defaultSort('tanggal_pinjam', 'desc');
+        if (!$ruangan) {
+            return [
+                Card::make('Total Peminjaman', 0),
+                Card::make('Peminjaman Disetujui', 0),
+                Card::make('Peminjaman Ditolak', 0),
+            ];
+        }
     }
 }
