@@ -26,7 +26,7 @@ class ViewRuangan extends ViewRecord
                                 ->weight('bold')
                                 ->columnSpan(2),
 
-                            Components\TextEntry::make('tipe.nama_tipe')
+                            Components\TextEntry::make('tipe.nama')
                                 ->label('Tipe Ruangan')
                                 ->badge()
                                 ->color(fn(string $state): string => match ($state) {
@@ -39,8 +39,7 @@ class ViewRuangan extends ViewRecord
 
                         Components\TextEntry::make('alamat')
                             ->label('Alamat / Lokasi')
-                            ->columnSpanFull()
-                            ->extraAttributes(['class' => 'bg-gray-50 p-2 rounded']),
+                            ->columnSpanFull(),
 
                         Components\ImageEntry::make('foto_ruangan')
                             ->label('Foto Ruangan')

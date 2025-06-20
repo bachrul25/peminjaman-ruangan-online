@@ -33,7 +33,7 @@ class Dashboard extends BaseDashboard // <-- UBAH EXTENDS KE BaseDashboard
     {
         // Tampilkan chart dan tabel di body/footer
         return [
-                // PeminjamanChart::class,
+            PeminjamanChart::class,
             RuanganChart::class,
             AktivitasPeminjamanTerkini::class,
         ];

@@ -82,7 +82,7 @@ class RuanganResource extends Resource
                             ->image()
                             ->imageEditor()
                             ->disk('public')
-                            ->directory('foto-ruangan')
+                            ->directory('ruangan')
                             ->label('Foto Ruangan')
                             ->required(),
 
