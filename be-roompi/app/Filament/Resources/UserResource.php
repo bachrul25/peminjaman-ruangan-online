@@ -43,6 +43,16 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true),
+                TextInput::make('password')
+                    ->label('Password')
+                    ->password()
+                    ->dehydrateStateUsing(fn($state) => filled($state) ? bcrypt($state) : null)
+                    ->required(fn(string $context) => $context === 'create')
+                    ->readOnly(fn(string $context) => $context === 'edit')
+                    ->helperText(fn(string $context) => $context === 'edit'
+                        ? 'Password tidak bisa diubah di sini.'
+                        : 'Minimal 8 karakter.')
+                    ->autocomplete('new-password'),
 
                 TextInput::make('telepon')
                     ->label('Nomor Telepon')
@@ -70,6 +80,11 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->sortable(),
+                // TextInput::make('password')
+                //     ->label('Password')
+                //     ->password()
+                //     ->readOnly(fn(string $context) => $context === 'edit'),
+
                 TextColumn::make('telepon')
                     ->label('Telepon')
                     ->searchable(),

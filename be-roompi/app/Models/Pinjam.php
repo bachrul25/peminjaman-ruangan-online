@@ -59,8 +59,9 @@ class Pinjam extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_iduser');
+        return $this->belongsTo(User::class, 'user_iduser', 'id_user');
     }
+
 
     public function checkin()
     {

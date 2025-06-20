@@ -62,21 +62,21 @@ class CheckoutResource extends Resource
                 Tables\Columns\TextColumn::make('denda') //
                     ->money('IDR')
                     ->sortable()
-                    ->color(fn(int $state): string => $state > 0 ? 'danger' : 'success')
+                    ->color(fn($state) => $state > 0 ? 'danger' : 'success')
                     ->badge(),
                 Tables\Columns\TextColumn::make('keterangan') //
-                    ->limit(40)
+                    // ->limit(40)
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -86,7 +86,7 @@ class CheckoutResource extends Resource
         return [
             'index' => Pages\ListCheckouts::route('/'),
             'create' => Pages\CreateCheckout::route('/create'),
-            'edit' => Pages\EditCheckout::route('/{record}/edit'),
+            // 'edit' => Pages\EditCheckout::route('/{record}/edit'),
         ];
     }
 }
