@@ -79,11 +79,13 @@ class RuanganResource extends Resource
                             ->step(1000),
 
                         FileUpload::make('foto_ruangan')
-                            ->label('Foto Ruangan')
                             ->image()
                             ->imageEditor()
-                            ->directory('foto-ruangan') // folder di storage/app/public/foto-ruangan
+                            ->disk('public')
+                            ->directory('foto-ruangan')
+                            ->label('Foto Ruangan')
                             ->required(),
+
 
                         TextInput::make('rating')
                             ->label('Rating')
