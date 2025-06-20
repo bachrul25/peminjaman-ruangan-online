@@ -3,34 +3,55 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Pinjam;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class PeminjamanChart extends ChartWidget
 {
     protected static ?string $heading = 'Trend Peminjaman 30 Hari Terakhir';
-    protected static ?int $sort = 2; // Urutan widget
+    protected static ?int $sort = 2;
 
     protected function getData(): array
     {
-        $data = Pinjam::select(DB::raw('DATE(tanggal_pinjam) as date'), DB::raw('count(*) as count'))
-            ->where('tanggal_pinjam', '>=', Carbon::now()->subDays(30))
-            ->groupBy('date')
-            ->orderBy('date', 'ASC')
-            ->get();
+        $tanggalAwal = Carbon::now()->subDays(29)->startOfDay();
+        $tanggalAkhir = Carbon::now()->endOfDay();
+
+        // Ambil jumlah peminjaman per tanggal
+        $data = Pinjam::select(
+            DB::raw('DATE(tanggal_pinjam) as date'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereBetween('tanggal_pinjam', [$tanggalAwal, $tanggalAkhir])
+            ->groupBy(DB::raw('DATE(tanggal_pinjam)'))
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Generate 30 hari terakhir
+        $labels = [];
+        $values = [];
+
+        for ($date = $tanggalAwal->copy(); $date <= $tanggalAkhir; $date->addDay()) {
+            $labels[] = $date->format('d M');
+            $values[] = $data->has($date->toDateString())
+                ? $data[$date->toDateString()]->total
+                : 0;
+        }
 
         return [
             'datasets' => [
                 [
                     'label' => 'Peminjaman',
-                    'data' => $data->pluck('count')->toArray(),
+                    'data' => $values,
                     'backgroundColor' => 'rgba(59, 130, 246, 0.2)',
                     'borderColor' => 'rgb(59, 130, 246)',
+                    'borderWidth' => 2,
+                    'fill' => true,
                     'tension' => 0.4,
                 ],
             ],
-            'labels' => $data->pluck('date')->map(fn($date) => Carbon::parse($date)->format('d M'))->toArray(),
+            'labels' => $labels,
         ];
     }
 
