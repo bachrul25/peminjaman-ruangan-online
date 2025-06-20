@@ -32,6 +32,8 @@ class Pinjam extends Model
 {
     protected $table = 'pinjams';
     protected $primaryKey = 'id_pinjam';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $casts = [
         'user_iduser' => 'int',

@@ -136,7 +136,9 @@ class RuanganResource extends Resource
                 TextColumn::make('pinjams_count')
                     ->label('Total Peminjaman')
                     ->counts('pinjams')
-                    ->sortable(),
+                    ->sortable()
+                    ->extraAttributes(['class' => 'text-right']),
+
 
                 ImageColumn::make('foto_ruangan')
                     ->label('Foto')
@@ -199,6 +201,14 @@ class RuanganResource extends Resource
             PinjamsRelationManager::class,
         ];
     }
+
+    public static function getWidgets(): array
+    {
+        return [
+            \App\Filament\Resources\RuanganResource\Widgets\RuanganStats::class,
+        ];
+    }
+
 
     public static function getPages(): array
     {

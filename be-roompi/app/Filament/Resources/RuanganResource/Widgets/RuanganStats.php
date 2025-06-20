@@ -2,59 +2,31 @@
 
 namespace App\Filament\Resources\RuanganResource\Widgets;
 
-use App\Models\Ruangan;
+use App\Models\Pinjam;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class RuanganStats extends BaseWidget
 {
+    public ?int $recordId = null; // Injected from View page
+
     protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
         return $table
             ->query(function () {
-                $ruangan = $this->getOwnerRecord();
-                return $ruangan->pinjams()->getQuery();
+                return Pinjam::query()
+                    ->where('ruangan_idruangan', $this->recordId); // filter berdasarkan ruangan
             })
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->label('Peminjam')
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('tanggal_pinjam')
-                    ->label('Tanggal Pinjam')
-                    ->date('d M Y')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('tanggal_selesai')
-                    ->label('Tanggal Selesai')
-                    ->date('d M Y')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'pending' => 'warning',
-                        'approved' => 'success',
-                        'rejected' => 'danger',
-                        'completed' => 'info',
-                        default => 'gray',
-                    })
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Waktu Permintaan')
-                    ->dateTime('d M Y H:i')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')->label('Peminjam'),
+                Tables\Columns\TextColumn::make('tanggal_pinjam')->label('Tanggal Pinjam')->date(),
+                Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
+                Tables\Columns\TextColumn::make('created_at')->label('Waktu Permintaan')->dateTime(),
             ])
-            ->heading('Riwayat Peminjaman')
-            ->description('Daftar peminjaman untuk ruangan ini')
-            ->emptyStateHeading('Belum ada riwayat peminjaman')
-            ->emptyStateDescription('Ruangan ini belum pernah dipinjam.')
-            ->defaultSort('tanggal_pinjam', 'desc');
+            ->heading('Riwayat Peminjaman Ruangan')
+            ->description('Berikut daftar peminjaman untuk ruangan ini.');
     }
 }

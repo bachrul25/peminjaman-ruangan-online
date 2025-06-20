@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-// use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -14,12 +13,8 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-// use Illuminate\Database\Eloquent\Builder;
-// use Filament\Tables\Filters\TrashedFilter;
 use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\UserResource\Pages;
-// use Illuminate\Database\Eloquent\SoftDeletingScope;
-// use App\Filament\Resources\UserResource\RelationManagers;
 
 class UserResource extends Resource
 {
@@ -43,6 +38,7 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true),
+
                 TextInput::make('password')
                     ->label('Password')
                     ->password()
@@ -56,14 +52,14 @@ class UserResource extends Resource
 
                 TextInput::make('telepon')
                     ->label('Nomor Telepon')
-                    ->tel() // Ini akan memvalidasi input sebagai nomor telepon
-                    ->nullable(), // Sesuai dengan migration yang nullable
+                    ->tel()
+                    ->nullable(),
 
                 Select::make('role')
                     ->label('Role')
                     ->options([
                         'admin' => 'Admin',
-                        'user' => 'User',
+                        'member' => 'Member',
                     ])
                     ->required(),
 
@@ -80,27 +76,24 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->sortable(),
-                // TextInput::make('password')
-                //     ->label('Password')
-                //     ->password()
-                //     ->readOnly(fn(string $context) => $context === 'edit'),
 
                 TextColumn::make('telepon')
                     ->label('Telepon')
                     ->searchable(),
+
                 TextColumn::make('role')->badge()->colors([
                     'primary' => 'admin',
-                    'gray' => 'user',
+                    'gray' => 'member',
                 ]),
-                // ...
+
                 IconColumn::make('email_verified_at')
                     ->label('Terverifikasi')
                     ->boolean()
-                    ->trueIcon('heroicon-o-check-badge') // Ikon jika sudah terverifikasi
-                    ->falseIcon('heroicon-o-x-circle')   // Ikon jika belum terverifikasi
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
                     ->falseColor('danger'),
-                // ...
+
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime()->sortable(),
@@ -109,9 +102,8 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('role')
                     ->options([
                         'admin' => 'Admin',
-                        'user' => 'User',
+                        'member' => 'Member',
                     ]),
-                // Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -125,6 +117,21 @@ class UserResource extends Resource
                             ->success()
                             ->send()
                     ),
+                Tables\Actions\Action::make('verifikasi')
+                    ->label('Verifikasi Sekarang')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->visible(fn($record) => is_null($record->email_verified_at))
+                    ->action(function ($record) {
+                        $record->email_verified_at = now();
+                        $record->save();
+
+                        Notification::make()
+                            ->title('Berhasil!')
+                            ->body("User {$record->name} berhasil diverifikasi.")
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -138,7 +145,6 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // Buatkan RelationManager untuk Pinjam jika ingin dikelola di tab relasi
             \App\Filament\Resources\UserResource\RelationManagers\PinjamsRelationManager::class,
         ];
     }
@@ -151,12 +157,4 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
-
-    // public static function getEloquentQuery(): Builder
-    // {
-    //     // return parent::getEloquentQuery()
-    //     //     ->withoutGlobalScopes([
-    //     //         SoftDeletingScope::class,
-    //     //     ]);
-    // }
 }
