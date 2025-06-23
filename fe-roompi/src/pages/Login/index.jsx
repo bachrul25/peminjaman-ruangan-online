@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { loginUser } from '../../_services/auth';
 
 
@@ -116,12 +116,12 @@ const Login = () => {
           {/* Footer link */}
           <p className="text-sm sm:text-base hind-madurai-regular mt-4 text-center text-gray-700">
             Don&apos;t have an account yet?{' '}
-            <a
-              href="/register"
+            <Link
+              to="/register"
               className="text-black hind-madurai-bold hover:underline"
             >
               Register here
-            </a>
+            </Link>
           </p>
         </div>
       </div>

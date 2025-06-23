@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import bg from '../../assets/images/bg.png';
 import NavBar from '../../components/NavBar';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { registerUser } from '../../_services/auth';
 
 
@@ -183,9 +183,9 @@ const Register = () => {
           {/* Link ke Login */}
           <div className="text-sm sm:text-base hind-madurai-regular mt-4 text-center text-gray-700">
             Already have an account?{' '}
-            <a href="/login" className="text-black hind-madurai-bold hover:underline">
+            <Link to="/login" className="text-black hind-madurai-bold hover:underline">
               Log in here
-            </a>
+            </Link>
           </div>
         </div>
       </div>

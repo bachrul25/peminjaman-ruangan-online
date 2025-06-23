@@ -126,7 +126,7 @@ function RoomDetail() {
         <div className="pt-6 mt-4 border-t-2 border-primary">
           <div className="overflow-hidden rounded-3xl">
             <img
-              src={`${imageStorage}/ruangan/${room.foto_ruangan}`}
+              src={`${imageStorage}/${room.foto_ruangan}`}
               alt={room.nama_ruangan}
               className="object-cover w-full h-64 sm:h-80 md:h-96"
             />

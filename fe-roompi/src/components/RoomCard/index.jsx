@@ -57,7 +57,7 @@ const RoomCard = ({ room, availability, besok }) => {
       {/* Gambar + Rating */}
       <div className="relative overflow-hidden rounded-xl">
         <img
-          src={`${imageStorage}/ruangan/${room.foto_ruangan}`}
+          src={`${imageStorage}/${room.foto_ruangan}`}
           alt={room.nama_ruangan}
           className="object-cover w-full h-40 md:h-56"
         />
